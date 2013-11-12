@@ -53,10 +53,23 @@ public class DatabaseOperations {
         
     }
     
-    public static <T> T getDocumentById(final Session session, final String id) {
+    public static <T> T getDocument(final Session session, final String id, final Class documentClass) {
+        
+        try {
+        
+            final URL couchdbURL = new URL(Utils.createBaseURL(session) + "/" + id);
+            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
+            
+            couchdbConnection.setRequestMethod(Constants.GET);
+            
+            final ObjectMapper mapper = new ObjectMapper();
+            return (T)mapper.readValue(couchdbConnection.getInputStream(), documentClass);
+            
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
         
         
-        return null;
     }
     
     public static Delete deleteDocument(final Session session, final String id, final String revision) {

@@ -1,7 +1,5 @@
 package com.standardstate.couch4j;
 
-import com.standardstate.couch4j.response.Delete;
-
 public class App {
     
     public static void main( String[] args ) throws Exception {
@@ -15,7 +13,7 @@ public class App {
         
         System.out.println(DatabaseOperations.getDatabaseInformation(session));
         
-        final User user = DatabaseOperations.getDocumentById(session, "db482334ffdeb7b93aabd5ea9d2ed7f6615bf199");
+        final User user = DatabaseOperations.getDocument(session, "db482334ffdeb7b93aabd5ea9d2ed7f6615bf199", User.class);
         System.out.println(user);
         
     }
