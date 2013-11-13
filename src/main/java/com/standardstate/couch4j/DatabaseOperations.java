@@ -40,14 +40,18 @@ public class DatabaseOperations {
             
             couchdbConnection.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(couchdbConnection.getOutputStream());
-            wr.writeBytes(Utils.objectToJSON(toCreate));
+            wr.writeBytes("{\"_id\":\"1\",\"username\":\"viande\"}");
             wr.flush();
             wr.close();
+            
+            System.out.println(couchdbURL);
+            System.out.println(Utils.objectToJSON(toCreate));
             
             final ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(couchdbConnection.getInputStream(), Create.class);
             
         } catch(IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         

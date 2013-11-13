@@ -1,5 +1,6 @@
 package com.standardstate.couch4j.response;
 
+import com.standardstate.couch4j.util.Utils;
 import java.io.IOException;
 import java.io.StringWriter;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -13,6 +14,7 @@ public class DatabaseInformation {
     private Integer update_seq = 0;
     private Integer purge_seq = 0;
     private Boolean compact_running = false;
+    private Integer data_size = 0;
     private Integer disk_size = 0;
     private Long instance_start_time = 0l;
     private Integer disk_format_version = 0;
@@ -96,17 +98,18 @@ public class DatabaseInformation {
     public void setDisk_format_version(final Integer disk_format_version) {
         this.disk_format_version = disk_format_version;
     }
+
+    public Integer getData_size() {
+        return data_size;
+    }
+
+    public void setData_size(Integer data_size) {
+        this.data_size = data_size;
+    }
     
     @Override
     public String toString() {
-        final ObjectMapper mapper = new ObjectMapper();
-        final StringWriter writer = new StringWriter();
-        try {
-            mapper.writeValue(writer, this);
-        } catch(IOException ioe) {
-            return ioe.getMessage();
-        }
-        return writer.toString();
+        return Utils.objectToJSON(this);
     }
     
 }

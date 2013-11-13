@@ -18,6 +18,14 @@ public class Utils {
         return writer.toString();
     }
     
+    public static String removeRev(final String json) {
+        
+        
+        
+        return json;
+        
+    }
+    
     public static String createBaseURL(final Session session) {
         return "http://" + session.getUsername() + ":" + session.getPassword() + "@" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase();
     }
