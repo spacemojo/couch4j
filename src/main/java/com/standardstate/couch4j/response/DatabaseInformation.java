@@ -1,9 +1,6 @@
 package com.standardstate.couch4j.response;
 
 import com.standardstate.couch4j.util.Utils;
-import java.io.IOException;
-import java.io.StringWriter;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class DatabaseInformation {
 
@@ -18,6 +15,8 @@ public class DatabaseInformation {
     private Integer disk_size = 0;
     private Long instance_start_time = 0l;
     private Integer disk_format_version = 0;
+    private String couchdb = null;
+    private String version = null;
 
     public Integer getCommitted_update_seq() {
         return committed_update_seq;
@@ -105,6 +104,22 @@ public class DatabaseInformation {
 
     public void setData_size(Integer data_size) {
         this.data_size = data_size;
+    }
+
+    public String getCouchdb() {
+        return couchdb;
+    }
+
+    public void setCouchdb(String couchdb) {
+        this.couchdb = couchdb;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
     
     @Override

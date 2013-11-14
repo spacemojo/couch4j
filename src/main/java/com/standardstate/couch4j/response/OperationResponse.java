@@ -2,7 +2,7 @@ package com.standardstate.couch4j.response;
 
 import com.standardstate.couch4j.util.Utils;
 
-public class Create {
+public class OperationResponse {
 
     private Boolean ok = false;
     private String id = null;
