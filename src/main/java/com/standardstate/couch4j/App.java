@@ -20,14 +20,18 @@ public class App {
         System.out.println(DatabaseOperations.listAllDatabases(session));
         
         session.setDatabase("cdbtest");
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         
         final User user = new User();
         user.setUsername("spacemojo");
         user.set_id("1234567890");
-        DocumentOperations.createDocumentWithId(session, user, user.get_id());
+        System.out.println(DocumentOperations.createDocumentWithId(session, user, user.get_id()));
         
-        Thread.sleep(5000);
+        Thread.sleep(2000);
+        user.setUsername("viande ... ");
+        System.out.println(DocumentOperations.createDocument(session, user));
+        
+        Thread.sleep(2000);
         
         System.out.println(DatabaseOperations.deleteDatabase(session, "cdbtest"));
         
