@@ -40,6 +40,8 @@ public class DocumentOperations {
             couchdbConnection.setRequestMethod(Constants.PUT);
             couchdbConnection.setRequestProperty("Content-Type", "application/json");
             
+            Utils.setAuthenticationHeader(couchdbConnection, session);
+            
             couchdbConnection.setDoOutput(true);
             final DataOutputStream wr = new DataOutputStream(couchdbConnection.getOutputStream());
             wr.writeBytes(Utils.removeRev(Utils.objectToJSON(toCreate)));

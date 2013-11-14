@@ -6,10 +6,10 @@ public class App {
         
         final Session session = new Session();
         session.setDatabase("");
-        session.setHost("127.0.0.1");
+        session.setHost("");
         session.setPort(5984);
-        session.setUsername("uname");
-        session.setPassword("pw");
+        session.setUsername("");
+        session.setPassword("");
         
         System.out.println(DocumentOperations.getDatabaseInformation(session));
         
