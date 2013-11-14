@@ -1,5 +1,6 @@
 package com.standardstate.couch4j;
 
+import com.standardstate.couch4j.response.Information;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.io.IOException;
@@ -24,6 +25,44 @@ public class DatabaseOperations {
             
             final ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(couchdbConnection.getInputStream(), List.class);
+            
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    public static Information getSystemInformation(final Session session) {
+        
+        try {
+        
+            final URL couchdbURL = new URL(Utils.createSystemURL(session));
+            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
+            
+            Utils.setGETMethod(couchdbConnection);
+            Utils.setAuthenticationHeader(couchdbConnection, session);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(couchdbConnection.getInputStream(), Information.class);
+            
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    public static Information getDatabaseInformation(final Session session, final String databaseName) {
+        
+        try {
+        
+            final URL couchdbURL = new URL(Utils.createSystemURL(session) + databaseName);
+            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
+            
+            Utils.setGETMethod(couchdbConnection);
+            Utils.setAuthenticationHeader(couchdbConnection, session);
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(couchdbConnection.getInputStream(), Information.class);
             
         } catch(IOException e) {
             throw new RuntimeException(e);

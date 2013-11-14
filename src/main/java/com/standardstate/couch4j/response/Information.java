@@ -2,7 +2,7 @@ package com.standardstate.couch4j.response;
 
 import com.standardstate.couch4j.util.Utils;
 
-public class DatabaseInformation {
+public class Information {
 
     private Integer committed_update_seq = 0;
     private String db_name = null;

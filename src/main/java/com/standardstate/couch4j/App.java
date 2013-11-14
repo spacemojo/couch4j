@@ -11,7 +11,7 @@ public class App {
         session.setUsername("");
         session.setPassword("");
         
-        System.out.println(DocumentOperations.getDatabaseInformation(session));
+        System.out.println(DatabaseOperations.getSystemInformation(session));
         
         System.out.println(DatabaseOperations.listAllDatabases(session));
         
