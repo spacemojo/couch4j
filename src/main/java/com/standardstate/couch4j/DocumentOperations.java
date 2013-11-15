@@ -1,17 +1,17 @@
 package com.standardstate.couch4j;
 
+import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class DocumentOperations {
-
+    
     public static OperationResponse createDocumentWithId(final Session session, final Object toCreate, final String id) {
         
         try {
@@ -64,18 +64,18 @@ public class DocumentOperations {
         
     } 
     
-    public static List getAllDocuments(final Session session) {
+    public static Map getAllDocuments(final Session session, final AllDocumentsOptions... options) {
         
         try {
-        
-            final URL couchdbURL = new URL(Utils.createDocumentURL(session) + "/_all_docs");
+            
+            final URL couchdbURL = new URL(Utils.createDocumentURL(session) + "/_all_docs" + ((options != null && options.length > 0)  ? Utils.toQueryString(options[0]) : ""));
             final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
             
             Utils.setGETMethod(couchdbConnection);
             Utils.setAuthenticationHeader(couchdbConnection, session);
             
             final ObjectMapper mapper = new ObjectMapper();
-            return (List)mapper.readValue(couchdbConnection.getInputStream(), ArrayList.class);
+            return (Map)mapper.readValue(couchdbConnection.getInputStream(), Object.class);
             
         } catch(IOException e) {
             throw new RuntimeException(e);

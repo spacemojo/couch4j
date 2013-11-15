@@ -1,5 +1,10 @@
 package com.standardstate.couch4j;
 
+import com.standardstate.couch4j.options.AllDocumentsOptions;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class App {
     
     public static void main( String[] args ) throws Exception {
@@ -33,7 +38,20 @@ public class App {
         
         Thread.sleep(2000);
         
-        System.out.println(DocumentOperations.getAllDocuments(session));
+        final AllDocumentsOptions options = new AllDocumentsOptions();
+        options.setIncludeDocs(Boolean.TRUE);
+        final Map allDocuments = DocumentOperations.getAllDocuments(session, options);
+        System.out.println("allDocuments : " + allDocuments.size());
+            
+        Set keySet = allDocuments.keySet();
+        for(Object key : keySet) {
+            System.out.println("Key (" + key.getClass().getName() + ") " + key + " -> value (" + allDocuments.get(key).getClass().getName() + ") " + allDocuments.get(key));
+        }
+
+        final List rows = (List)allDocuments.get("rows");
+        for(Object row : rows) {
+            System.out.println("row (" + row.getClass().getName() + ") " + row);
+        }            
         
         System.out.println(DatabaseOperations.deleteDatabase(session, "cdbtest"));
         

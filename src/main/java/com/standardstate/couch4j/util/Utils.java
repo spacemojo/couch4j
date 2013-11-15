@@ -2,6 +2,7 @@ package com.standardstate.couch4j.util;
 
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
+import com.standardstate.couch4j.options.AllDocumentsOptions;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -102,6 +103,10 @@ public class Utils {
     
     private static void setHeader(final HttpURLConnection couchdbConnection, final String headerName, final String headerValue) {
         couchdbConnection.setRequestProperty(headerName, headerValue);
+    }
+    
+    public static String toQueryString(final AllDocumentsOptions options) {
+        return "?descending=" + options.isDescending() + "&include_docs=" + options.isIncludeDocs() + (options.getLimit() > 0 ? "&limit=" + options.getLimit() : "");
     }
     
 }
