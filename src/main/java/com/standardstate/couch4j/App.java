@@ -1,9 +1,7 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.options.AllDocumentsOptions;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.standardstate.couch4j.response.AllDocuments;
 
 public class App {
     
@@ -40,19 +38,9 @@ public class App {
         
         final AllDocumentsOptions options = new AllDocumentsOptions();
         options.setIncludeDocs(Boolean.TRUE);
-        final Map allDocuments = DocumentOperations.getAllDocuments(session, options);
-        System.out.println("allDocuments : " + allDocuments.size());
+        final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session, options);
+        System.out.println("allDocuments : " + allDocuments.getTotalRows());
             
-        Set keySet = allDocuments.keySet();
-        for(Object key : keySet) {
-            System.out.println("Key (" + key.getClass().getName() + ") " + key + " -> value (" + allDocuments.get(key).getClass().getName() + ") " + allDocuments.get(key));
-        }
-
-        final List rows = (List)allDocuments.get("rows");
-        for(Object row : rows) {
-            System.out.println("row (" + row.getClass().getName() + ") " + row);
-        }            
-        
         System.out.println(DatabaseOperations.deleteDatabase(session, "cdbtest"));
         
         System.out.println(DatabaseOperations.listAllDatabases(session));
