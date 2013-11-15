@@ -6,6 +6,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class DocumentOperations {
@@ -61,6 +63,25 @@ public class DocumentOperations {
         }
         
     } 
+    
+    public static List getAllDocuments(final Session session) {
+        
+        try {
+        
+            final URL couchdbURL = new URL(Utils.createDocumentURL(session) + "/_all_docs");
+            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
+            
+            Utils.setGETMethod(couchdbConnection);
+            Utils.setAuthenticationHeader(couchdbConnection, session);
+            
+            final ObjectMapper mapper = new ObjectMapper();
+            return (List)mapper.readValue(couchdbConnection.getInputStream(), ArrayList.class);
+            
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+            
+    }
     
     public static <T> T getDocument(final Session session, final String id, final Class documentClass) {
         

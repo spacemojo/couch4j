@@ -33,6 +33,8 @@ public class App {
         
         Thread.sleep(2000);
         
+        System.out.println(DocumentOperations.getAllDocuments(session));
+        
         System.out.println(DatabaseOperations.deleteDatabase(session, "cdbtest"));
         
         System.out.println(DatabaseOperations.listAllDatabases(session));
