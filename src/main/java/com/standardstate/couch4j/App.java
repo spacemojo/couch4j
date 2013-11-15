@@ -40,7 +40,10 @@ public class App {
         options.setIncludeDocs(Boolean.TRUE);
         final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session, options);
         System.out.println("allDocuments : " + allDocuments.getTotalRows());
-            
+        
+        final User document = DocumentOperations.getDocument(session, "1234567890", User.class);
+        System.out.println(document);
+        
         System.out.println(DatabaseOperations.deleteDatabase(session, "cdbtest"));
         
         System.out.println(DatabaseOperations.listAllDatabases(session));
