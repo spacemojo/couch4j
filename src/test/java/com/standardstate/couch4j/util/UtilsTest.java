@@ -1,21 +1,23 @@
 package com.standardstate.couch4j.util;
 
-import com.standardstate.couch4j.User;
+import com.standardstate.couch4j.mock.MockObject;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class UtilsTest {
     
     @Test
     public void removeRevTest() {
         
-        final User user = new User();
-        user.set_id("1234567890");
-        user.setUsername("viande");
-                
-        final String jsonUser = Utils.objectToJSON(user);
+        final MockObject obj = new MockObject();
+        obj.set_id("1029384756");
+        obj.set_rev("1-1029384756");
+        obj.setIntValue(12);
+        obj.setName("MockObjectName");
         
-        System.out.println(jsonUser + " -> " + Utils.removeRev(jsonUser));
-        System.out.println("{\"_id\":\"1234567890\",\"_rev\":\"null\",\"username\":\"viande\"} -> " + Utils.removeRev("{\"_id\":\"1234567890\",\"_rev\":\"null\",\"username\":\"viande\"}"));
+        final String jsonUser = Utils.objectToJSON(obj);
+        
+        assertEquals("", "", Utils.removeRev(jsonUser));
         
     }
     

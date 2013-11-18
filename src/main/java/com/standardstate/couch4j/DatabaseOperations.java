@@ -17,7 +17,7 @@ public class DatabaseOperations {
         
         try {
             
-            final URL couchdbURL = new URL(Utils.createSystemURL(session) + ALL_DBS);
+            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + ALL_DBS);
             final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
             couchdbConnection.setRequestMethod(Constants.GET);
     
@@ -36,7 +36,7 @@ public class DatabaseOperations {
         
         try {
         
-            final URL couchdbURL = new URL(Utils.createSystemURL(session));
+            final URL couchdbURL = new URL(Utils.createDatabaseURL(session));
             final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
             
             Utils.setGETMethod(couchdbConnection);
@@ -55,7 +55,7 @@ public class DatabaseOperations {
         
         try {
         
-            final URL couchdbURL = new URL(Utils.createSystemURL(session) + databaseName);
+            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + databaseName);
             final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
             
             Utils.setGETMethod(couchdbConnection);
@@ -86,7 +86,7 @@ public class DatabaseOperations {
         
         try {
             
-            final URL couchdbURL = new URL(Utils.createSystemURL(session) + name);
+            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + name);
             
             final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
             couchdbConnection.setRequestMethod(method);

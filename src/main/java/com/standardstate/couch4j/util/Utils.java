@@ -59,7 +59,7 @@ public class Utils {
         
     }
     
-    public static String createSystemURL(final Session session) {
+    public static String createDatabaseURL(final Session session) {
         return "http://" + session.getHost() + ":" + session.getPort() + "/";
     }
     
