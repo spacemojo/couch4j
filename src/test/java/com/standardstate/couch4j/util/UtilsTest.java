@@ -17,7 +17,8 @@ public class UtilsTest {
         
         final String jsonUser = Utils.objectToJSON(obj);
         
-        assertEquals("", "", Utils.removeRev(jsonUser));
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", jsonUser);
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", Utils.removeRev(jsonUser));
         
     }
     

@@ -27,7 +27,7 @@ public class Utils {
     
     public static String removeRev(final String json) {
         
-        final Pattern pattern = Pattern.compile("(\"_rev\"[\\s]*:[\\s]*[\"]?.*[\"]?,)");
+        final Pattern pattern = Pattern.compile("(\"_rev\":\"[^\"]*[\"]?[,]?)");
         
         final StringBuffer insideBuffer = new StringBuffer();        
         final Matcher insideMatcher = pattern.matcher(json);
@@ -44,7 +44,7 @@ public class Utils {
     
     public static String removeId(final String json) {
         
-        final Pattern pattern = Pattern.compile("(\"_id\"[\\s]*:[\\s]*[\"]?.*[\"]?,)");
+        final Pattern pattern = Pattern.compile("(\"_id\":\"[^\"]*[\"]?[,]?)");
         
         final StringBuffer insideBuffer = new StringBuffer();        
         final Matcher insideMatcher = pattern.matcher(json);
