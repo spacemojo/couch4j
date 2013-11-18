@@ -15,10 +15,26 @@ public class UtilsTest {
         obj.setIntValue(12);
         obj.setName("MockObjectName");
         
-        final String jsonUser = Utils.objectToJSON(obj);
+        final String jsonObj = Utils.objectToJSON(obj);
         
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", jsonUser);
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", Utils.removeRev(jsonUser));
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", jsonObj);
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", Utils.removeRev(jsonObj));
+        
+    }
+    
+    @Test
+    public void removeIdTest() {
+        
+        final MockObject obj = new MockObject();
+        obj.set_id("1029384756");
+        obj.set_rev("1-1029384756");
+        obj.setIntValue(12);
+        obj.setName("MockObjectName");
+        
+        final String jsonObj = Utils.objectToJSON(obj);
+        
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", jsonObj);
+        assertEquals("removeRevTest", "{\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12}", Utils.removeId(jsonObj));
         
     }
     

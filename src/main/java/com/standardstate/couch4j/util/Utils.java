@@ -26,25 +26,16 @@ public class Utils {
     }
     
     public static String removeRev(final String json) {
-        
-        final Pattern pattern = Pattern.compile("(\"_rev\":\"[^\"]*[\"]?[,]?)");
-        
-        final StringBuffer insideBuffer = new StringBuffer();        
-        final Matcher insideMatcher = pattern.matcher(json);
-        
-        while(insideMatcher.find()) {
-            insideMatcher.appendReplacement(insideBuffer, "");
-        }
-        
-        insideMatcher.appendTail(insideBuffer);
-        
-        return insideBuffer.toString();
-        
+        return removeJSONField(json, "_rev");        
     }
     
     public static String removeId(final String json) {
+        return removeJSONField(json, "_id");        
+    }
+    
+    public static String removeJSONField(final String json, final String fieldName) {
         
-        final Pattern pattern = Pattern.compile("(\"_id\":\"[^\"]*[\"]?[,]?)");
+        final Pattern pattern = Pattern.compile("(\"" + fieldName + "\":\"[^\"]*[\"]?[,}]?)");
         
         final StringBuffer insideBuffer = new StringBuffer();        
         final Matcher insideMatcher = pattern.matcher(json);
