@@ -14,6 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class Utils {
 
+    private final static String REVISION_FIELD = "_rev";
+    private final static String ID_FIELD = "_id";
+    
     public static String objectToJSON(final Object object) {
         final ObjectMapper mapper = new ObjectMapper();
         final StringWriter writer = new StringWriter();
@@ -26,11 +29,11 @@ public class Utils {
     }
     
     public static String removeRev(final String json) {
-        return removeJSONField(json, "_rev");        
+        return removeJSONField(json, REVISION_FIELD);        
     }
     
     public static String removeId(final String json) {
-        return removeJSONField(json, "_id");        
+        return removeJSONField(json, ID_FIELD);        
     }
     
     public static String removeJSONField(final String json, final String fieldName) {
