@@ -6,7 +6,9 @@ import com.standardstate.couch4j.options.AllDocumentsOptions;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
@@ -41,7 +43,7 @@ public class Utils {
         final Pattern pattern = Pattern.compile("(\"" + fieldName + "\":\"[^\"]*[\"]?[,}]?)");
         
         final StringBuffer insideBuffer = new StringBuffer();        
-        final Matcher insideMatcher = pattern.matcher(json);
+        final Matcher insideMatcher = pattern.matcher(json.replace("\":null", "\":\"null\""));
         
         while(insideMatcher.find()) {
             insideMatcher.appendReplacement(insideBuffer, "");
@@ -59,6 +61,14 @@ public class Utils {
     
     public static String createDocumentURL(final Session session) {
         return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase();
+    }
+    
+    public static URL createURL(final String url) {
+        try {
+            return new URL(url);
+        } catch(MalformedURLException mue) {
+            throw new RuntimeException(mue);
+        }
     }
     
     private static void setRequestMethod(final HttpURLConnection couchdbConnection, final String method) {
