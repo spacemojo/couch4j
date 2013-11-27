@@ -3,12 +3,14 @@ package com.standardstate.couch4j.util;
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.options.AllDocumentsOptions;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
@@ -111,6 +113,49 @@ public class Utils {
     
     public static String toQueryString(final AllDocumentsOptions options) {
         return "?descending=" + options.isDescending() + "&include_docs=" + options.isIncludeDocs() + (options.getLimit() > 0 ? "&limit=" + options.getLimit() : "");
+    }
+    
+    public static void writeToConnection(final HttpURLConnection couchdbConnection, final String content) {
+        try {
+            couchdbConnection.setDoOutput(true);
+            final DataOutputStream wr = new DataOutputStream(couchdbConnection.getOutputStream());
+            wr.writeBytes(content);
+            wr.flush();
+            wr.close();
+        } catch(IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+    
+    public static HttpURLConnection openURLConnection(final URL couchdbURL) {
+        try {
+            return (HttpURLConnection)couchdbURL.openConnection();
+        } catch(IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+    
+    public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            return (T)mapper.readValue(couchdbConnection.getInputStream(), targetClass);
+        } catch(IOException e) {
+            throw parseError(couchdbConnection, e);
+        }
+    }
+    
+    public static RuntimeException parseError(final HttpURLConnection connection, final Exception cause) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final Map error = (Map)mapper.readValue(connection.getErrorStream(), Object.class);
+            return new RuntimeException("{\"responseCode\":" + connection.getResponseCode() + "," +
+                    "\"responseMessage\":\"" + connection.getResponseMessage() + "\"," +
+                    "\"error\":\"" + error.get("error") + "\"," + 
+                    "\"reason\":\"" + error.get("reason") + "\"," + 
+                    "\"method\":\"" + connection.getRequestMethod() + "\"}", cause);
+        } catch(IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
     }
     
 }

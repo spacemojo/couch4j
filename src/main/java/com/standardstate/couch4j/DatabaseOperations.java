@@ -15,90 +15,66 @@ public class DatabaseOperations {
     
     public static List<String> listAllDatabases(final Session session) {
         
-        try {
-            
-            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + ALL_DBS);
-            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
-            couchdbConnection.setRequestMethod(Constants.GET);
-    
-            Utils.setAuthenticationHeader(couchdbConnection, session);
-            
-            final ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(couchdbConnection.getInputStream(), List.class);
-            
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + ALL_DBS);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+        
+        Utils.setGETMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+
+        return Utils.readInputStream(couchdbConnection, List.class);
         
     }
     
     public static Information getSystemInformation(final Session session) {
         
-        try {
-        
-            final URL couchdbURL = new URL(Utils.createDatabaseURL(session));
-            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
-            
-            Utils.setGETMethod(couchdbConnection);
-            Utils.setAuthenticationHeader(couchdbConnection, session);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(couchdbConnection.getInputStream(), Information.class);
-            
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session));
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+
+        Utils.setGETMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+
+        return Utils.readInputStream(couchdbConnection, Information.class);
         
     }
     
-    public static Information getDatabaseInformation(final Session session, final String databaseName) {
-        
-        try {
-        
-            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + databaseName);
-            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
-            
-            Utils.setGETMethod(couchdbConnection);
-            Utils.setAuthenticationHeader(couchdbConnection, session);
-            
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(couchdbConnection.getInputStream(), Information.class);
-            
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-        
+    public static OperationResponse createDatabase(final Session session, final String name) {    
+        return createOrDeleteDatabase(session, name, Constants.PUT);        
     }
     
-    public static OperationResponse createDatabase(final Session session, final String name) {
-        
-        return createOrDeleteDatabase(session, name, Constants.PUT);
-        
-    }
-    
-    public static OperationResponse deleteDatabase(final Session session, final String name) {
-        
-        return createOrDeleteDatabase(session, name, Constants.DELETE);
-        
+    public static OperationResponse deleteDatabase(final Session session, final String name) {    
+        return createOrDeleteDatabase(session, name, Constants.DELETE);        
     }
     
     private static OperationResponse createOrDeleteDatabase(final Session session, final String name, final String method) {
         
-        try {
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + name);
             
-            final URL couchdbURL = new URL(Utils.createDatabaseURL(session) + name);
-            
-            final HttpURLConnection couchdbConnection = (HttpURLConnection)couchdbURL.openConnection();
-            couchdbConnection.setRequestMethod(method);
-            couchdbConnection.setRequestProperty("Content-Type", "text/plain");
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+        
+        setAppropriateRequestMethod(couchdbConnection, method);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
 
-            Utils.setAuthenticationHeader(couchdbConnection, session);
-            
-            return new ObjectMapper().readValue(couchdbConnection.getInputStream(), OperationResponse.class);
-            
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
+        
+    }
+    
+    private static void setAppropriateRequestMethod(final HttpURLConnection couchdbConnection, final String method) {
+        if(method.equals(Constants.PUT)) {
+            Utils.setPUTMethod(couchdbConnection);
+        } else if(method.equals(Constants.DELETE)) {
+            Utils.setDELETEMethod(couchdbConnection);
+        }                
+    }
+    
+    public static Information getDatabaseInformation(final Session session, final String databaseName) {
+        
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + databaseName);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+
+        Utils.setGETMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+
+        return Utils.readInputStream(couchdbConnection, Information.class);
         
     }
     

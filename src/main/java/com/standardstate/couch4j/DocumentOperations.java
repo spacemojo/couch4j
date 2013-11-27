@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class DocumentOperations {
     
@@ -23,85 +22,42 @@ public class DocumentOperations {
     public static OperationResponse createDocumentWithId(final Session session, final Object toCreate, final String id) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
-        final HttpURLConnection couchdbConnection = openURLConnection(couchdbURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setPUTMethod(couchdbConnection);
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        writeToConnection(couchdbConnection, Utils.removeRev(Utils.objectToJSON(toCreate)));
+        Utils.writeToConnection(couchdbConnection, Utils.removeRev(Utils.objectToJSON(toCreate)));
 
-        return readInputStream(couchdbConnection, OperationResponse.class);
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
         
-    }
-    
-    private static void writeToConnection(final HttpURLConnection couchdbConnection, final String content) {
-        try {
-            couchdbConnection.setDoOutput(true);
-            final DataOutputStream wr = new DataOutputStream(couchdbConnection.getOutputStream());
-            wr.writeBytes(content);
-            wr.flush();
-            wr.close();
-        } catch(IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
-    }
-    
-    private static HttpURLConnection openURLConnection(final URL couchdbURL) {
-        try {
-            return (HttpURLConnection)couchdbURL.openConnection();
-        } catch(IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
-    }
-    
-    private static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return (T)mapper.readValue(couchdbConnection.getInputStream(), targetClass);
-        } catch(IOException e) {
-            throw parseError(couchdbConnection, e);
-        }
-    }
-    
-    private static RuntimeException parseError(final HttpURLConnection connection, final Exception cause) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final Map error = (Map)mapper.readValue(connection.getErrorStream(), Object.class);
-            return new RuntimeException("{\"responseCode\":" + connection.getResponseCode() + "," +
-                    "\"responseMessage\":\"" + connection.getResponseMessage() + "\"," +
-                    "\"error\":\"" + error.get("error") + "\"," + 
-                    "\"reason\":\"" + error.get("reason") + "\"," + 
-                    "\"method\":\"" + connection.getRequestMethod() + "\"}", cause);
-        } catch(IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
     }
     
     public static OperationResponse createDocument(final Session session, final Object toCreate) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session));
-        final HttpURLConnection couchdbConnection = openURLConnection(couchdbURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setPOSTMethod(couchdbConnection);
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        writeToConnection(couchdbConnection, Utils.removeId(Utils.removeRev(Utils.objectToJSON(toCreate))));
+        Utils.writeToConnection(couchdbConnection, Utils.removeId(Utils.removeRev(Utils.objectToJSON(toCreate))));
 
-        return readInputStream(couchdbConnection, OperationResponse.class);
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
         
     } 
     
     public static AllDocuments getAllDocuments(final Session session, final AllDocumentsOptions... options) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + ALL_DOCUMENTS + ((options != null && options.length > 0)  ? Utils.toQueryString(options[0]) : ""));
-        final HttpURLConnection couchdbConnection = openURLConnection(couchdbURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setGETMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        final Map docs = (Map)readInputStream(couchdbConnection, Object.class);
+        final Map docs = (Map)Utils.readInputStream(couchdbConnection, Object.class);
 
         final AllDocuments allDocuments = new AllDocuments();
         allDocuments.setTotalRows((Integer)docs.get(TOTAL_ROWS));
@@ -115,12 +71,12 @@ public class DocumentOperations {
     public static <T> T getDocument(final Session session, final String id, final Class documentClass) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
-        final HttpURLConnection couchdbConnection = openURLConnection(couchdbURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setGETMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        return (T)readInputStream(couchdbConnection, documentClass);
+        return (T)Utils.readInputStream(couchdbConnection, documentClass);
         
     }
     
@@ -142,7 +98,7 @@ public class DocumentOperations {
             wr.flush();
             wr.close();
             
-            final Map docs = (Map)readInputStream(couchdbConnection, Object.class);
+            final Map docs = (Map)Utils.readInputStream(couchdbConnection, Object.class);
             
             return null;
             
@@ -154,12 +110,12 @@ public class DocumentOperations {
     public static OperationResponse deleteDocument(final Session session, final String id, final String revision) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id + "?rev=" + revision);
-        final HttpURLConnection couchdbConnection = openURLConnection(couchdbURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setDELETEMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        return readInputStream(couchdbConnection, OperationResponse.class);
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
         
     }
     
