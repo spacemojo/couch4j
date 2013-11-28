@@ -15,4 +15,10 @@ DatabaseOperations.createDatabase(session, "databaseName");
 // To delete a CouchDB database
 DatabaseOperations.deleteDatabase(session, "databaseName");
 
+// To add a document and let CouchDB generate the _id
+DocumentOperations.createDocument(session, myPOJO);
+
+// To add a document and set the _id yourself 
+DocumentOperations.createDocument(session, myPOJO, "myId");
+
 ```
