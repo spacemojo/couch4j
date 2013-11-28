@@ -74,4 +74,23 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         
     }
     
+    @Test(expected = RuntimeException.class)
+    public void createDocumentTwice() {
+        
+        final Date now = new Date();
+        final MockObject mock = new MockObject();
+        mock.setActive(Boolean.TRUE);
+        mock.setDate(now);
+        mock.setIntValue(12);
+        mock.setName("This is the name of the mock bean ... ");
+        
+        final OperationResponse createResponse = DocumentOperations.createDocument(session, mock);
+        mock.set_id(createResponse.getId());
+        mock.set_rev(createResponse.getRev());
+        
+        final OperationResponse createTwiceResponse = DocumentOperations.createDocumentWithId(session, mock, mock.get_id());
+        fail("This test shoudl have failed : " + createTwiceResponse.toString());
+        
+    }
+    
 }

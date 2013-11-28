@@ -7,6 +7,7 @@ public class BaseCouch4JTest {
     
     static {
         
+        session.setDatabase("");
         session.setHost("");
         session.setUsername("");
         session.setPassword("");

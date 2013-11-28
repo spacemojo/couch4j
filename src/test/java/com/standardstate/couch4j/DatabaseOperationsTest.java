@@ -23,7 +23,6 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
     public void getSystemInformation() {
         
         final Information systemInformation = DatabaseOperations.getSystemInformation(session);
-        System.out.println(systemInformation);
         assertNotNull("getDatabaseInformation", systemInformation);
         
     }
