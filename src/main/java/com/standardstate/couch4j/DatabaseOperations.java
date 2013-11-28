@@ -3,19 +3,15 @@ package com.standardstate.couch4j;
 import com.standardstate.couch4j.response.Information;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import org.codehaus.jackson.map.ObjectMapper;
 
 public class DatabaseOperations {
-
-    private final static String ALL_DBS = "_all_dbs";
-    
+   
     public static List<String> listAllDatabases(final Session session) {
         
-        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + ALL_DBS);
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + Constants.ALL_DBS);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
         
         Utils.setGETMethod(couchdbConnection);

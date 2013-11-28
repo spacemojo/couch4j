@@ -17,9 +17,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class Utils {
-
-    private final static String REVISION_FIELD = "_rev";
-    private final static String ID_FIELD = "_id";
     
     public static String objectToJSON(final Object object) {
         final ObjectMapper mapper = new ObjectMapper();
@@ -33,11 +30,11 @@ public class Utils {
     }
     
     public static String removeRev(final String json) {
-        return removeJSONField(json, REVISION_FIELD);        
+        return removeJSONField(json, Constants.REVISION_FIELD);        
     }
     
     public static String removeId(final String json) {
-        return removeJSONField(json, ID_FIELD);        
+        return removeJSONField(json, Constants.ID_FIELD);        
     }
     
     public static String removeJSONField(final String json, final String fieldName) {

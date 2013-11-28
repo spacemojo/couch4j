@@ -1,16 +1,13 @@
 package com.standardstate.couch4j;
 
-import org.junit.Before;
-
 public class BaseCouch4JTest {
 
     protected final static String TEST_DATABASE_NAME = "c4jtest";
-    protected Session session = new Session();
+    protected final static Session session = new Session();
     
-    @Before
-    public void sessionSetUp() {
+    static {
         
-        session.setDatabase("");
+        session.setHost("");
         session.setUsername("");
         session.setPassword("");
                 
