@@ -19,6 +19,8 @@ DatabaseOperations.deleteDatabase(session, "databaseName");
 DocumentOperations.createDocument(session, myPOJO);
 
 // To add a document and set the _id yourself 
-DocumentOperations.createDocument(session, myPOJO, "myId");
+DocumentOperations.createDocumentWithId(session, myPOJO, "myId");
 
+// To fetch a document
+final MyClass myObj = DocumentOperations.getDocument(session, "myId", MyClass.class);
 ```
