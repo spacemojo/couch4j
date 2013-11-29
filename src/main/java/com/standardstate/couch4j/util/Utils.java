@@ -3,6 +3,7 @@ package com.standardstate.couch4j.util;
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.options.AllDocumentsOptions;
+import com.standardstate.couch4j.response.AllDocuments;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -141,6 +142,31 @@ public class Utils {
         }
     }
     
+    public static <T> T readString(final String jsonString, final Class targetClass) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            return (T)mapper.readValue(jsonString, targetClass);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public static <T> AllDocuments<T> initAllDocuments(final Map docs, final AllDocumentsOptions options) {
+        final AllDocuments<T> allDocuments = new AllDocuments<>();
+        allDocuments.setTotalRows((Integer)docs.get(Constants.TOTAL_ROWS));
+        allDocuments.setOffset((Integer)docs.get(Constants.OFFSET));
+        allDocuments.setOptions(options);
+        return allDocuments;
+    }
+    
+    public static AllDocumentsOptions initAllDocumentsOptions(final int limit, final boolean descending, final boolean includeDocs) {
+        final AllDocumentsOptions options = new AllDocumentsOptions();
+        options.setDescending(descending);
+        options.setIncludeDocs(includeDocs);
+        options.setLimit(limit);
+        return options;
+    }
+    
     public static RuntimeException parseError(final HttpURLConnection connection, final Exception cause) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -154,5 +180,5 @@ public class Utils {
             throw new RuntimeException(ioe);
         }
     }
-    
+        
 }

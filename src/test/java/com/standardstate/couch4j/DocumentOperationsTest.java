@@ -5,10 +5,7 @@ import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -51,9 +48,6 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         final OperationResponse deleteDocument = DocumentOperations.deleteDocument(session, mock.get_id(), mock.get_rev());
         assertTrue("createAndDeleteDocumentWithId", deleteDocument.isOk());
         
-        //final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session);
-        //assertEquals("createAndDeleteDocumentWithId", new Integer(0).intValue(), allDocuments.getTotalRows().intValue());
-        
     }
     
     @Test
@@ -76,6 +70,14 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         
         final OperationResponse deleteDocument = DocumentOperations.deleteDocument(session, mock.get_id(), mock.get_rev());
         assertTrue("createAndDeleteDocument", deleteDocument.isOk());
+        
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void getNonExistingDocument() {
+        
+        final MockObject document = DocumentOperations.getDocument(session, "nonexisting", MockObject.class);
+        fail("This test should have failed ... " + document);
         
     }
     
@@ -107,23 +109,11 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
             mock.setDate(new Date());
             mock.setIntValue(i);
             mock.setName("This is the name of the mock bean ... " + i);
-            System.out.println(DocumentOperations.createDocument(session, mock));
+            DocumentOperations.createDocument(session, mock);
         } 
         
-//        final AllDocumentsOptions options = new AllDocumentsOptions();
-//        options.setIncludeDocs(Boolean.TRUE);
-//        options.setLimit(3);
-//        final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session, options);
-//        for(Object row : allDocuments.getRows()) {
-//            final LinkedHashMap rowMap = (LinkedHashMap)row;
-//            final LinkedHashMap documentMap = (LinkedHashMap)rowMap.get("doc");
-//            final ObjectMapper mapper = new ObjectMapper();
-//            final StringWriter stringWriter = new StringWriter();
-//            mapper.writeValue(stringWriter, documentMap);
-//            System.out.println(stringWriter.toString());
-//            final MockObject mockObject = (MockObject)mapper.readValue(stringWriter.toString(), MockObject.class);
-//            System.out.println("MOCK OBJECT " + mockObject.toString());
-//        }
+        final AllDocuments<MockObject> allDocuments = DocumentOperations.getAllDocuments(session, MockObject.class);
+        assertEquals("getAllDocuments", 101, allDocuments.getRows().size());
         
     }
     

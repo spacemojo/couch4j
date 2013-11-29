@@ -1,20 +1,21 @@
 package com.standardstate.couch4j.response;
 
 import com.standardstate.couch4j.options.AllDocumentsOptions;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AllDocuments {
+public class AllDocuments<T> {
 
     private AllDocumentsOptions options = null;
     private Integer totalRows = 0;
     private Integer offset = 0;
-    private List rows = null;
+    private List<T> rows = new ArrayList<>();
 
     public AllDocumentsOptions getOptions() {
         return options;
     }
 
-    public void setOptions(AllDocumentsOptions options) {
+    public void setOptions(final AllDocumentsOptions options) {
         this.options = options;
     }
 
@@ -22,7 +23,7 @@ public class AllDocuments {
         return totalRows;
     }
 
-    public void setTotalRows(Integer totalRows) {
+    public void setTotalRows(final Integer totalRows) {
         this.totalRows = totalRows;
     }
 
@@ -30,16 +31,16 @@ public class AllDocuments {
         return offset;
     }
 
-    public void setOffset(Integer offset) {
+    public void setOffset(final Integer offset) {
         this.offset = offset;
     }
 
-    public List getRows() {
-        return rows;
+    public void addRow(final T toAdd) {
+        rows.add(toAdd);
     }
 
-    public void setRows(List rows) {
-        this.rows = rows;
+    public List<T> getRows() {
+        return this.rows;
     }
     
 }

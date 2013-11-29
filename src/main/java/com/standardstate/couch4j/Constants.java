@@ -15,6 +15,7 @@ public class Constants {
     public final static String TOTAL_ROWS = "total_rows";
     public final static String OFFSET = "offset";
     public final static String ROWS = "rows";
+    public final static String DOC = "doc";
     
     public final static String REVISION_FIELD = "_rev";
     public final static String ID_FIELD = "_id";
