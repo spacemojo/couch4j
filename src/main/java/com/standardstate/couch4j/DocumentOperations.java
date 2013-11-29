@@ -41,7 +41,7 @@ public class DocumentOperations {
         
     } 
     
-    public static AllDocuments getAllDocuments(final Session session, final AllDocumentsOptions... options) {
+    public static <T> List<T> getAllDocuments(final Session session, final Class documentClass, final AllDocumentsOptions... options) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS + ((options != null && options.length > 0)  ? Utils.toQueryString(options[0]) : ""));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -50,13 +50,13 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
         final Map docs = (Map)Utils.readInputStream(couchdbConnection, Object.class);
-
         final AllDocuments allDocuments = new AllDocuments();
         allDocuments.setTotalRows((Integer)docs.get(Constants.TOTAL_ROWS));
         allDocuments.setOffset((Integer)docs.get(Constants.OFFSET));
         allDocuments.setRows((List)docs.get(Constants.ROWS));
         allDocuments.setOptions((options.length > 0 ? options[0] : null));
-        return allDocuments;
+        
+        return null;
             
     }
     
