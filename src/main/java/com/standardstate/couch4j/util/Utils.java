@@ -62,6 +62,10 @@ public class Utils {
     public static String createDocumentURL(final Session session) {
         return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase();
     }
+
+    public static String createDesignDocumentURL(final Session session, final String designDocumentName) {
+        return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase() + "/_design/" + designDocumentName;
+    }
     
     public static URL createURL(final String url) {
         try {

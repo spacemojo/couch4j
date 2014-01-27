@@ -12,7 +12,7 @@ public class OperationResponse {
         return ok;
     }
 
-    public void setOk(Boolean ok) {
+    public void setOk(final Boolean ok) {
         this.ok = ok;
     }
 
@@ -20,7 +20,7 @@ public class OperationResponse {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -28,7 +28,7 @@ public class OperationResponse {
         return rev;
     }
 
-    public void setRev(String rev) {
+    public void setRev(final String rev) {
         this.rev = rev;
     }
     
