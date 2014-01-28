@@ -25,19 +25,20 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
     public void createDesignDocumentTest() {
         
         final DesignDocument designDocument = new DesignDocument();
-        designDocument.set_id("users");
+        designDocument.set_id("_design/users");
         
         final MapView view = new MapView();
         view.setName("_all");
         view.setMap("function(){emit(doc, null);}");
         designDocument.getViews().add(view);
         
-        final OperationResponse createDesignDocument = DesignDocumentOperations.createDesignDocument(session, designDocument);
-        assertTrue("createDesignDocumentTest(isOk)", createDesignDocument.isOk());
-        assertEquals("createDesignDocumentTest(getId)", "_design/users", createDesignDocument.getId());
+        final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(session, designDocument);
+        assertTrue("createDesignDocumentTest(isOk)", operationResponse.isOk());
+        assertEquals("createDesignDocumentTest(getId)", "_design/users", operationResponse.getId());
         
         final DesignDocument createdDesignDocument = DesignDocumentOperations.getDesignDocument(session, "users");
-    
+        assertEquals("createDesignDocumentTest(getId from fetched)", "_design/users", createdDesignDocument.get_id());
+        
     }
     
 }

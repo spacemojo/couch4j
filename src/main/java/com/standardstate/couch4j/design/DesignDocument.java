@@ -16,7 +16,7 @@ public class DesignDocument {
     }
 
     public void set_id(final String _id) {
-        this._id = "_design/" + _id;
+        this._id = _id;
     }
 
     public String get_rev() {

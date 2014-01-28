@@ -1,7 +1,11 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.design.DesignDocument;
+import com.standardstate.couch4j.design.MapReduceView;
+import com.standardstate.couch4j.design.MapView;
 import com.standardstate.couch4j.design.RawDesignDocument;
+import com.standardstate.couch4j.design.RawView;
+import com.standardstate.couch4j.design.View;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.net.HttpURLConnection;
@@ -37,10 +41,31 @@ public class DesignDocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
         
         final RawDesignDocument rawDocument = Utils.readInputStream(couchdbConnection, RawDesignDocument.class);
+        return createDesignDocumentFromRaw(rawDocument);
         
+    }
+    
+    private static DesignDocument createDesignDocumentFromRaw(final RawDesignDocument rawDocument) {
         
-        return null;
+        final DesignDocument document = new DesignDocument();
+        document.set_id(rawDocument.get_id());
+        document.setLanguage(rawDocument.getLanguage());
+        document.set_rev(rawDocument.get_rev());
         
+        for(RawView rawView : rawDocument.getViews()) {
+            document.getViews().add(createViewFromRaw(rawView));
+        }
+        
+        return document;
+        
+    }
+    
+    private static View createViewFromRaw(final RawView rawView) {
+        if(rawView.getReduce() == null || rawView.getReduce().equals("")) {
+            return new MapView(rawView.getName(), rawView.getMap());
+        } else {
+            return new MapReduceView(rawView.getName(), rawView.getMap(), rawView.getReduce());
+        }
     }
     
 }
