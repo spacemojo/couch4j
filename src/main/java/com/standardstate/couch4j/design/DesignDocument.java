@@ -1,4 +1,4 @@
-package com.standardstate.couch4j;
+package com.standardstate.couch4j.design;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ public class DesignDocument {
     private String _id = null;
     private String _rev = null;
     private String language = "javascript";
-    private String name = null;
     
     private List<View> views = new ArrayList<>();
     
@@ -17,7 +16,7 @@ public class DesignDocument {
     }
 
     public void set_id(final String _id) {
-        this._id = _id;
+        this._id = "_design/" + _id;
     }
 
     public String get_rev() {
@@ -34,14 +33,6 @@ public class DesignDocument {
 
     public void setLanguage(final String language) {
         this.language = language;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
     }
 
     public List<View> getViews() {

@@ -1,7 +1,6 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.mock.MockObject;
-import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
 import java.io.IOException;

@@ -1,7 +1,9 @@
 package com.standardstate.couch4j.util;
 
 import com.standardstate.couch4j.Constants;
+import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.Session;
+import com.standardstate.couch4j.design.MapView;
 import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.AllDocuments;
 import java.io.DataOutputStream;
@@ -64,7 +66,7 @@ public class Utils {
     }
 
     public static String createDesignDocumentURL(final Session session, final String designDocumentName) {
-        return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase() + "/_design/" + designDocumentName;
+        return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase() + "/" + designDocumentName;
     }
     
     public static URL createURL(final String url) {
@@ -176,11 +178,10 @@ public class Utils {
             final ObjectMapper mapper = new ObjectMapper();
             final Map error = (Map)mapper.readValue(connection.getErrorStream(), Object.class);
             final String message = "{\"responseCode\":" + connection.getResponseCode() + "," +
-                    "\"responseMessage\":\"" + connection.getResponseMessage() + "\"," +
-                    "\"error\":\"" + error.get("error") + "\"," + 
-                    "\"reason\":\"" + error.get("reason") + "\"," + 
-                    "\"method\":\"" + connection.getRequestMethod() + "\"}";
-            System.out.println(message);
+                                    "\"responseMessage\":\"" + connection.getResponseMessage() + "\"," +
+                                    "\"error\":\"" + error.get("error") + "\"," + 
+                                    "\"reason\":\"" + error.get("reason") + "\"," + 
+                                    "\"method\":\"" + connection.getRequestMethod() + "\"}";
             return new RuntimeException(message, cause);
         } catch(IOException ioe) {
             throw new RuntimeException(ioe);
