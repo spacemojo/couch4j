@@ -111,7 +111,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
             DocumentOperations.createDocument(session, mock);
         } 
         
-        final AllDocuments<MockObject> allDocuments = DocumentOperations.getAllDocuments(session, MockObject.class);
+        final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session);
         assertEquals("getAllDocuments", 101, allDocuments.getRows().size());
         
     }

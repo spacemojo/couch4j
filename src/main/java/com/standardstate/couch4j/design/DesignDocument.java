@@ -1,7 +1,8 @@
 package com.standardstate.couch4j.design;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.standardstate.couch4j.util.ConstrainedMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DesignDocument {
 
@@ -9,7 +10,7 @@ public class DesignDocument {
     private String _rev = null;
     private String language = "javascript";
     
-    private List<View> views = new ArrayList<>();
+    private Map<String, ConstrainedMap> views = new HashMap<>();
     
     public String get_id() {
         return _id;
@@ -35,11 +36,11 @@ public class DesignDocument {
         this.language = language;
     }
 
-    public List<View> getViews() {
+    public Map<String, ConstrainedMap> getViews() {
         return views;
     }
 
-    public void setViews(final List<View> views) {
+    public void setViews(final Map<String, ConstrainedMap> views) {
         this.views = views;
     }
     

@@ -1,9 +1,8 @@
 package com.standardstate.couch4j.util;
 
 import com.standardstate.couch4j.Constants;
-import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.Session;
-import com.standardstate.couch4j.design.MapView;
+import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.AllDocuments;
 import java.io.DataOutputStream;
@@ -13,6 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -157,8 +158,8 @@ public class Utils {
         }
     }
     
-    public static <T> AllDocuments<T> initAllDocuments(final Map docs, final AllDocumentsOptions options) {
-        final AllDocuments<T> allDocuments = new AllDocuments<>();
+    public static AllDocuments initAllDocuments(final Map docs, final AllDocumentsOptions options) {
+        final AllDocuments allDocuments = new AllDocuments();
         allDocuments.setTotalRows((Integer)docs.get(Constants.TOTAL_ROWS));
         allDocuments.setOffset((Integer)docs.get(Constants.OFFSET));
         allDocuments.setOptions(options);
@@ -171,6 +172,22 @@ public class Utils {
         options.setIncludeDocs(includeDocs);
         options.setLimit(limit);
         return options;
+    }
+    
+    public static void appendMapFunctionToView(final DesignDocument document, final String viewName, final String mapFunction) {
+        if(!document.getViews().containsKey(viewName)) {
+            document.getViews().put(viewName, new ConstrainedMap());
+        }
+        document.getViews().get(viewName).put("map", mapFunction);
+    }
+
+    public static <T> void parseGenericValues(final Map rawDocuments, final List<T> documents, final Class documentClass) {
+        for(Object row : (List)rawDocuments.get(Constants.ROWS)) {            
+            final LinkedHashMap documentMap = (LinkedHashMap)((LinkedHashMap)row).get(Constants.VALUE);
+            final String jsonString = Utils.objectToJSON(documentMap);
+            final T document = Utils.readString(jsonString, documentClass);
+            documents.add(document);
+        }
     }
     
     public static RuntimeException parseError(final HttpURLConnection connection, final Exception cause) {

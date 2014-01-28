@@ -4,12 +4,12 @@ import com.standardstate.couch4j.options.AllDocumentsOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllDocuments<T> {
+public class AllDocuments {
 
     private AllDocumentsOptions options = null;
     private Integer totalRows = 0;
     private Integer offset = 0;
-    private List<T> rows = new ArrayList<>();
+    private final List rows = new ArrayList<>();
 
     public AllDocumentsOptions getOptions() {
         return options;
@@ -35,11 +35,11 @@ public class AllDocuments<T> {
         this.offset = offset;
     }
 
-    public void addRow(final T toAdd) {
+    public void addRow(final Object toAdd) {
         rows.add(toAdd);
     }
 
-    public List<T> getRows() {
+    public List getRows() {
         return this.rows;
     }
     

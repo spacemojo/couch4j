@@ -1,15 +1,14 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.design.DesignDocument;
-import com.standardstate.couch4j.design.MapReduceView;
-import com.standardstate.couch4j.design.MapView;
-import com.standardstate.couch4j.design.RawDesignDocument;
-import com.standardstate.couch4j.design.RawView;
-import com.standardstate.couch4j.design.View;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DesignDocumentOperations {
 
@@ -40,32 +39,26 @@ public class DesignDocumentOperations {
         Utils.setGETMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
         
-        final RawDesignDocument rawDocument = Utils.readInputStream(couchdbConnection, RawDesignDocument.class);
-        return createDesignDocumentFromRaw(rawDocument);
+        return Utils.readInputStream(couchdbConnection, DesignDocument.class);
         
     }
     
-    private static DesignDocument createDesignDocumentFromRaw(final RawDesignDocument rawDocument) {
+    public static <T> List<T> callView(final Session session, final String designDocumentId, final String viewName, final Class documentClass) {
         
-        final DesignDocument document = new DesignDocument();
-        document.set_id(rawDocument.get_id());
-        document.setLanguage(rawDocument.getLanguage());
-        document.set_rev(rawDocument.get_rev());
+        final List<T> documents = new ArrayList<>();
+        final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName);
         
-        for(RawView rawView : rawDocument.getViews()) {
-            document.getViews().add(createViewFromRaw(rawView));
-        }
+        final URL couchdbURL = Utils.createURL(getDesignURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
         
-        return document;
+        Utils.setGETMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
         
-    }
-    
-    private static View createViewFromRaw(final RawView rawView) {
-        if(rawView.getReduce() == null || rawView.getReduce().equals("")) {
-            return new MapView(rawView.getName(), rawView.getMap());
-        } else {
-            return new MapReduceView(rawView.getName(), rawView.getMap(), rawView.getReduce());
-        }
+        final Map docs = (Map)Utils.readInputStream(couchdbConnection, Object.class);
+        Utils.parseGenericValues(docs, documents, documentClass);
+        
+        return documents;
+        
     }
     
 }

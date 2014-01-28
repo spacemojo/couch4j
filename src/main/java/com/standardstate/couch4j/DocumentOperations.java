@@ -42,15 +42,15 @@ public class DocumentOperations {
         
     } 
     
-    public static <T> AllDocuments<T> getAllDocuments(final Session session, final Class documentClass) {
-        return getAllDocuments(session, documentClass, 0, Boolean.FALSE);
+    public static AllDocuments getAllDocuments(final Session session) {
+        return getAllDocuments(session, 0, Boolean.FALSE);
     }
     
-    public static <T> AllDocuments<T> getAllDocuments(final Session session, final Class documentClass, final int limit) {
-        return getAllDocuments(session, documentClass, limit, Boolean.FALSE);
+    public static AllDocuments getAllDocuments(final Session session, final int limit) {
+        return getAllDocuments(session, limit, Boolean.FALSE);
     }
     
-    public static <T> AllDocuments<T> getAllDocuments(final Session session, final Class documentClass, final int limit, final boolean descending) {
+    public static AllDocuments getAllDocuments(final Session session, final int limit, final boolean descending) {
         
         final AllDocumentsOptions options = Utils.initAllDocumentsOptions(limit, descending, Boolean.TRUE);
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS + Utils.toQueryString(options));
@@ -60,13 +60,12 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
         final Map docs = (Map)Utils.readInputStream(couchdbConnection, Object.class);
-        final AllDocuments<T> allDocuments = Utils.initAllDocuments(docs, options);
+        final AllDocuments allDocuments = Utils.initAllDocuments(docs, options);
         
         for(Object row : (List)docs.get(Constants.ROWS)) {            
             final LinkedHashMap documentMap = (LinkedHashMap)((LinkedHashMap)row).get(Constants.DOC);
             final String jsonString = Utils.objectToJSON(documentMap);
-            final T readObject = Utils.readString(jsonString, documentClass);
-            allDocuments.addRow(readObject);
+            allDocuments.addRow(jsonString);
         }
         
         return allDocuments;
