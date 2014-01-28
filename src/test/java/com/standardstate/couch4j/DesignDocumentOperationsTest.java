@@ -22,9 +22,8 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         designDocument.getViews().add(view);
         
         final OperationResponse createDesignDocument = DesignDocumentOperations.createDesignDocument(session, designDocument);
-        System.out.println(createDesignDocument);
         
-        //DatabaseOperations.deleteDatabase(session, TEST_DATABASE_NAME);
+        // DatabaseOperations.deleteDatabase(session, TEST_DATABASE_NAME);
         
     }
     

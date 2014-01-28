@@ -11,7 +11,6 @@ public class DesignDocumentOperations {
     public static OperationResponse createDesignDocument(final Session session, final DesignDocument document) {
         
         final String createDesignURL = Utils.createDesignDocumentURL(session, document.get_id());
-        System.out.println("createDesignURL : " + createDesignURL);
         
         final URL couchdbURL = Utils.createURL(createDesignURL);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -20,7 +19,6 @@ public class DesignDocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
         
         final String jsonContent = Utils.removeRev(Utils.objectToJSON(document));
-        System.out.println("JSON Content : " + jsonContent);
         Utils.writeToConnection(couchdbConnection, jsonContent);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
