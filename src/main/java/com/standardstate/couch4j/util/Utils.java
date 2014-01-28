@@ -175,11 +175,13 @@ public class Utils {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             final Map error = (Map)mapper.readValue(connection.getErrorStream(), Object.class);
-            return new RuntimeException("{\"responseCode\":" + connection.getResponseCode() + "," +
+            final String message = "{\"responseCode\":" + connection.getResponseCode() + "," +
                     "\"responseMessage\":\"" + connection.getResponseMessage() + "\"," +
                     "\"error\":\"" + error.get("error") + "\"," + 
                     "\"reason\":\"" + error.get("reason") + "\"," + 
-                    "\"method\":\"" + connection.getRequestMethod() + "\"}", cause);
+                    "\"method\":\"" + connection.getRequestMethod() + "\"}";
+            System.out.println(message);
+            return new RuntimeException(message, cause);
         } catch(IOException ioe) {
             throw new RuntimeException(ioe);
         }
