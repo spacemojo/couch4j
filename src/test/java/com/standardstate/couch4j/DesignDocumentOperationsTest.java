@@ -5,7 +5,9 @@ import com.standardstate.couch4j.mock.MockObject;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,8 +53,13 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
             DocumentOperations.createDocument(session, mock);
         }
         // call a view ...
-        final List<MockObject> mockObjects = DesignDocumentOperations.callView(session, "_design/users", "all", MockObject.class);
+        final List<MockObject> mockObjects = DesignDocumentOperations.callView(session, "_design/users", "byname", MockObject.class);
         System.out.println("MockObjects : " + mockObjects.size());
+        
+        final Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_KEY, "Mock document 3");
+        final List<MockObject> calledWithParameters = DesignDocumentOperations.callView(session, "_design/users", "byname", MockObject.class, parameters);
+        System.out.println(calledWithParameters.get(0));
         
     }
     

@@ -5,8 +5,8 @@ import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +44,13 @@ public class DesignDocumentOperations {
     }
     
     public static <T> List<T> callView(final Session session, final String designDocumentId, final String viewName, final Class documentClass) {
+        return callView(session, designDocumentId, viewName, documentClass, null);
+    }
+    
+    public static <T> List<T> callView(final Session session, final String designDocumentId, final String viewName, final Class documentClass, final Map<String, String> parameters) {
         
         final List<T> documents = new ArrayList<>();
-        final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName);
+        final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName + parametersToQueryString(parameters));
         
         final URL couchdbURL = Utils.createURL(getDesignURL);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -58,6 +62,26 @@ public class DesignDocumentOperations {
         Utils.parseGenericValues(docs, documents, documentClass);
         
         return documents;
+        
+    }
+    
+    private static String parametersToQueryString(final Map<String, String> parameters) {
+
+        if(parameters == null || parameters.isEmpty()) {
+            return "";
+        } else {
+            
+            final StringBuilder builder = new StringBuilder("?");
+            for(String key : parameters.keySet()) {
+                try {
+                    builder.append(key).append("=\"").append(URLEncoder.encode(parameters.get(key), "UTF-8")).append("\"&");
+                } catch(Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return builder.toString().substring(0, (builder.length() - 1));
+            
+        }
         
     }
     
