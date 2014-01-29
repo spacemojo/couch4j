@@ -3,6 +3,7 @@ package com.standardstate.couch4j;
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -70,19 +71,22 @@ public class DesignDocumentOperations {
         if(parameters == null || parameters.isEmpty()) {
             return "";
         } else {
-            
             final StringBuilder builder = new StringBuilder("?");
             for(String key : parameters.keySet()) {
-                try {
-                    builder.append(key).append("=\"").append(URLEncoder.encode(parameters.get(key), "UTF-8")).append("\"&");
-                } catch(Exception e) {
-                    throw new RuntimeException(e);
-                }
+                builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key))).append("\"&");
             }
             return builder.toString().substring(0, (builder.length() - 1));
-            
         }
         
     }
+    
+    private static String safeEncodeUTF8(final String toEncode) {
+        try {
+            return URLEncoder.encode(toEncode, "UTF-8");
+        } catch(UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     
 }
