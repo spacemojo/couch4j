@@ -8,9 +8,9 @@ public class BaseCouch4JTest {
     static {
 
         session.setDatabase("");
-        session.setHost("");
-        session.setUsername("");
-        session.setPassword("");
+        session.setHost("standardstate.com");
+        session.setUsername("c4j");
+        session.setPassword("rosadiso");
 
     }
 
