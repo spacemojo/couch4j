@@ -98,6 +98,30 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         fail("This test shoudl have failed : " + createTwiceResponse.toString());
         
     }
+
+    @Test
+    public void updateDocument() {
+        
+        final Date now = new Date();
+        final MockObject mock = new MockObject();
+        mock.setActive(Boolean.TRUE);
+        mock.setDate(now);
+        mock.setIntValue(12);
+        mock.setName("This is the name of the mock bean ... ");
+        
+        final OperationResponse createResponse = DocumentOperations.createDocument(session, mock);
+        mock.set_id(createResponse.getId());
+        mock.set_rev(createResponse.getRev());
+        
+        mock.setName("This is an UPDATED name .. ");
+        final OperationResponse updateResponse = DocumentOperations.updateDocument(session, mock.get_id(), mock);
+        assertTrue(updateResponse.isOk());
+        
+        final MockObject document = DocumentOperations.getDocument(session, mock.get_id(), MockObject.class);
+        assertEquals("updateDocument()", document.get_id(), mock.get_id());
+        assertEquals("updateDocument()", document.getName(), mock.getName());
+        
+    }
     
     @Test
     public void getAllDocuments() throws IOException {

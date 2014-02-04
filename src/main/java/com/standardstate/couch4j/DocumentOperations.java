@@ -84,6 +84,21 @@ public class DocumentOperations {
         
     }
     
+    public static OperationResponse updateDocument(final Session session, final String id, final Object document) {
+        
+        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+        
+        Utils.setPUTMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+        Utils.setJSONContentHeader(couchdbConnection);
+        
+        Utils.writeToConnection(couchdbConnection, Utils.removeId(Utils.objectToJSON(document)));
+        
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
+        
+    }
+    
     public static OperationResponse deleteDocument(final Session session, final String id, final String revision) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id + "?rev=" + revision);
