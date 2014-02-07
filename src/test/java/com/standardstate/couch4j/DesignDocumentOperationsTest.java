@@ -1,6 +1,7 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.design.DesignDocument;
+import com.standardstate.couch4j.design.ValidationDocument;
 import com.standardstate.couch4j.mock.MockObject;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
@@ -50,6 +51,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
             mock.setDate(new Date( (new Date().getTime() - (10000 * i)) ));
             mock.setIntValue(i);
             mock.setName("Mock document " + i);
+            mock.setType("mock");
             DocumentOperations.createDocument(session, mock);
         }
         // call a view ...
@@ -60,6 +62,18 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         parameters.put(Constants.PARAM_KEY, "Mock document 3");
         final List<MockObject> calledWithParameters = DesignDocumentOperations.callView(session, "_design/users", "byname", MockObject.class, parameters);
         System.out.println(calledWithParameters.get(0));
+        
+    }
+    
+    @Test
+    public void createValidationDocumentTest() {
+        
+        final ValidationDocument validation = new ValidationDocument();
+        validation.set_id("_design/uservalidation");
+        validation.setValidate_doc_update("function(newDoc, oldDoc, usrCtx){if(!newDoc.type){throw { \"forbidden\":\"Documents need a type\" };}}");
+        
+        final OperationResponse createResponse = DesignDocumentOperations.createValidationDocument(session, validation);
+        assertTrue("createValidationDocumentTest()", createResponse.isOk());
         
     }
     

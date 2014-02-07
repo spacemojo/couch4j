@@ -1,8 +1,0 @@
-{
-    "_id": "_design/contacts",
-    "views": {
-        "all": {
-            "map": "function(doc) {emit(doc, null);}"
-        }
-    }
-}

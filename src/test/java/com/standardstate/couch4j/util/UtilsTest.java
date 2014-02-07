@@ -17,13 +17,14 @@ public class UtilsTest {
         obj.setIntValue(12);
         obj.setName("MockObjectName");
         obj.setDate(new Date());
+        obj.setType("mock");
     }
     
     @Test
     public void objectToJSONSuccess() {
         
         final String jsonObj = Utils.objectToJSON(obj);
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
         
     }
     
@@ -32,8 +33,8 @@ public class UtilsTest {
         
         final String jsonObj = Utils.objectToJSON(obj);
         
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeRev(jsonObj));
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeRev(jsonObj));
         
     }
     
@@ -42,8 +43,8 @@ public class UtilsTest {
         
         final String jsonObj = Utils.objectToJSON(obj);
         
-        assertEquals("removeIdTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
-        assertEquals("removeIdTest", "{\"_rev\":\"1-1029384756\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeId(jsonObj));
+        assertEquals("removeIdTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
+        assertEquals("removeIdTest", "{\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeId(jsonObj));
         
     }
     

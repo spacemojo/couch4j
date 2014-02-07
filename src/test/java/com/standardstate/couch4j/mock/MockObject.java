@@ -7,6 +7,7 @@ public class MockObject {
 
     private String _id = null;
     private String _rev = null;
+    private String type = null;
     private String name = null;
     private Integer intValue = 0;
     private Date date = null;
@@ -60,6 +61,14 @@ public class MockObject {
         this.active = active;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

@@ -15,7 +15,7 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
         for(String database : databases) {
             System.out.println(database);
         }
-        assertEquals("listAllDatabases", 3, databases.size());
+        assertTrue("listAllDatabases", databases.size() > 1);
         
     }
     

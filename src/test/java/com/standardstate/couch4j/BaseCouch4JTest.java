@@ -8,7 +8,7 @@ public class BaseCouch4JTest {
     static {
 
         session.setDatabase("");
-        session.setHost("");
+        session.setHost("127.0.0.1");
         session.setUsername("");
         session.setPassword("");
 
