@@ -2,11 +2,21 @@ package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.response.Information;
 import com.standardstate.couch4j.response.OperationResponse;
+import com.standardstate.couch4j.response.Welcome;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DatabaseOperationsTest extends BaseCouch4JTest {
+
+    @Test
+    public void getDatabaseWelcome() {
+        
+        final Welcome serverWelcome = DatabaseOperations.getServerWelcome(session);
+        assertEquals("getDatabaseWelcome(1)", "Welcome", serverWelcome.getCouchdb());
+        assertFalse("getDatabaseWelcome(2)", serverWelcome.getVersion().isEmpty());
+        
+    }
     
     @Test
     public void listAllDatabases() {
