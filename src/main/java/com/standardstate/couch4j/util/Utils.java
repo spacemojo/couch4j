@@ -59,15 +59,15 @@ public class Utils {
     }
     
     public static String createDatabaseURL(final Session session) {
-        return "http://" + session.getHost() + ":" + session.getPort() + "/";
+        return session.getHost() + ":" + session.getPort() + "/";
     }
     
     public static String createDocumentURL(final Session session) {
-        return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase();
+        return session.getHost() + ":" + session.getPort() + "/" + session.getDatabase();
     }
-
+    
     public static String createDesignDocumentURL(final Session session, final String designDocumentName) {
-        return "http://" + session.getHost() + ":" + session.getPort() + "/" + session.getDatabase() + "/" + designDocumentName;
+        return session.getHost() + ":" + session.getPort() + "/" + session.getDatabase() + "/" + designDocumentName;
     }
     
     public static URL createURL(final String url) {
