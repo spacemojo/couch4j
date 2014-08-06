@@ -7,10 +7,11 @@ public class BaseCouch4JTest {
 
     static {
 
-        session.setDatabase("");
-        session.setHost("127.0.0.1");
-        session.setUsername("");
-        session.setPassword("");
+        session.setDatabase("c4jtest");
+        session.setHost("http://standardstate.com");
+        session.setPassword("rosadiso");
+        session.setPort(5984);
+        session.setUsername("couchForJay");
 
     }
 
