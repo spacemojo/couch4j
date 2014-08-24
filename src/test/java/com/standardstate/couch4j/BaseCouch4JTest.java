@@ -9,7 +9,7 @@ public class BaseCouch4JTest {
 
         session.setDatabase("c4jtest");
         session.setHost("http://standardstate.com");
-        session.setPassword("rosadiso");
+        session.setPassword("rosadiso;102938*");
         session.setPort(5984);
         session.setUsername("couchForJay");
 
