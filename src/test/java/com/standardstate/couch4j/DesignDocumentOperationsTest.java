@@ -5,10 +5,10 @@ import com.standardstate.couch4j.design.ValidationDocument;
 import com.standardstate.couch4j.mock.MockObject;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.joda.time.DateTime;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         for(int i = 0 ; i < 10 ; i++) {
             final MockObject mock = new MockObject();
             mock.setActive(Boolean.TRUE);
-            mock.setDate(new Date( (new Date().getTime() - (10000 * i)) ));
+            mock.setDate(new DateTime( (new DateTime().getMillis() - (10000 * i)) ));
             mock.setIntValue(i);
             mock.setName("Mock document " + i);
             mock.setType("mock");

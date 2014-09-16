@@ -1,7 +1,7 @@
 package com.standardstate.couch4j.util;
 
 import com.standardstate.couch4j.mock.MockObject;
-import java.util.Date;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -16,7 +16,7 @@ public class UtilsTest {
         obj.set_rev("1-1029384756");
         obj.setIntValue(12);
         obj.setName("MockObjectName");
-        obj.setDate(new Date());
+        obj.setDate(new DateTime());
         obj.setType("mock");
     }
     
@@ -24,7 +24,7 @@ public class UtilsTest {
     public void objectToJSONSuccess() {
         
         final String jsonObj = Utils.objectToJSON(obj);
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
+        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}", jsonObj);
         
     }
     
@@ -33,8 +33,15 @@ public class UtilsTest {
         
         final String jsonObj = Utils.objectToJSON(obj);
         
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
-        assertEquals("removeRevTest", "{\"_id\":\"1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeRev(jsonObj));
+        String expected = "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
+        System.out.println(expected);
+        System.out.println(jsonObj);
+        assertEquals("removeRevTest", expected, jsonObj);
+        
+        expected = "{\"_id\":\"1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
+        System.out.println(expected);
+        System.out.println(Utils.removeRev(jsonObj));
+        assertEquals("removeRevTest", expected, Utils.removeRev(jsonObj));
         
     }
     
@@ -43,8 +50,15 @@ public class UtilsTest {
         
         final String jsonObj = Utils.objectToJSON(obj);
         
-        assertEquals("removeIdTest", "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", jsonObj);
-        assertEquals("removeIdTest", "{\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":" + obj.getDate().getTime() + ",\"active\":false}", Utils.removeId(jsonObj));
+        String expected = "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
+        System.out.println(expected);
+        System.out.println(jsonObj);
+        assertEquals("removeIdTest", expected, jsonObj);
+        
+        expected = "{\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
+        System.out.println(expected);
+        System.out.println(Utils.removeId(jsonObj));
+        assertEquals("removeIdTest", expected, Utils.removeId(jsonObj));
         
     }
     

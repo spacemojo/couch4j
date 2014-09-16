@@ -2,6 +2,7 @@ package com.standardstate.couch4j.mock;
 
 import java.util.Date;
 import java.util.Objects;
+import org.joda.time.DateTime;
 
 public class MockObject {
 
@@ -10,7 +11,7 @@ public class MockObject {
     private String type = null;
     private String name = null;
     private Integer intValue = 0;
-    private Date date = null;
+    private DateTime date = null;
     private Boolean active = Boolean.FALSE;
 
     public String get_id() {
@@ -45,12 +46,12 @@ public class MockObject {
         this.intValue = intValue;
     }
 
-    public Date getDate() {
-        return new Date(date.getTime());
+    public DateTime getDate() {
+        return new DateTime(date.getMillis());
     }
 
-    public void setDate(final Date date) {
-        this.date = new Date(date.getTime());
+    public void setDate(final DateTime date) {
+        this.date = new DateTime(date.getMillis());
     }
 
     public Boolean isActive() {
