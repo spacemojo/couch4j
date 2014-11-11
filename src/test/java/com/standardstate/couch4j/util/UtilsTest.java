@@ -62,4 +62,14 @@ public class UtilsTest {
         
     }
     
+    @Test
+    public void constructorTest() {
+        assertNotNull("constructorTest()", new Utils());
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void createURLFailure() {
+        Utils.createURL("htp:/thisisamalformedurl");
+    }
+    
 }

@@ -14,6 +14,8 @@ import java.util.Map;
 
 public class DesignDocumentOperations {
 
+    private final static String ENCODING = "UTF-8";
+    
     public static OperationResponse createDesignDocument(final Session session, final DesignDocument document) {
         
         final String createDesignURL = Utils.createDesignDocumentURL(session, document.get_id());
@@ -98,9 +100,9 @@ public class DesignDocumentOperations {
         
     }
     
-    private static String safeEncodeUTF8(final String toEncode) {
+    public static String safeEncodeUTF8(final String toEncode, final String... encoding) {
         try {
-            return URLEncoder.encode(toEncode, "UTF-8");
+            return URLEncoder.encode(toEncode, (encoding.length == 1 ? encoding[0] : ENCODING));
         } catch(UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

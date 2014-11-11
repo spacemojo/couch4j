@@ -1,34 +1,16 @@
 package com.standardstate.couch4j.mock;
 
-import java.util.Date;
+import com.standardstate.couch4j.AbstractCouchDBDocument;
 import java.util.Objects;
 import org.joda.time.DateTime;
 
-public class MockObject {
+public class MockObject extends AbstractCouchDBDocument {
 
-    private String _id = null;
-    private String _rev = null;
     private String type = null;
     private String name = null;
     private Integer intValue = 0;
     private DateTime date = null;
     private Boolean active = Boolean.FALSE;
-
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(final String _id) {
-        this._id = _id;
-    }
-
-    public String get_rev() {
-        return _rev;
-    }
-
-    public void set_rev(final String _rev) {
-        this._rev = _rev;
-    }
 
     public String getName() {
         return name;
@@ -73,8 +55,8 @@ public class MockObject {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + Objects.hashCode(this._id);
-        hash = 19 * hash + Objects.hashCode(this._rev);
+        hash = 19 * hash + Objects.hashCode(this.get_id());
+        hash = 19 * hash + Objects.hashCode(this.get_rev());
         hash = 19 * hash + Objects.hashCode(this.name);
         hash = 19 * hash + Objects.hashCode(this.intValue);
         hash = 19 * hash + Objects.hashCode(this.date);
@@ -91,10 +73,10 @@ public class MockObject {
             return false;
         }
         final MockObject other = (MockObject) obj;
-        if (!Objects.equals(this._id, other._id)) {
+        if (!Objects.equals(this.get_id(), other.get_id())) {
             return false;
         }
-        if (!Objects.equals(this._rev, other._rev)) {
+        if (!Objects.equals(this.get_rev(), other.get_rev())) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {

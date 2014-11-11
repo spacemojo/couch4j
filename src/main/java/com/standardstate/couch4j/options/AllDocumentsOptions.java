@@ -1,5 +1,7 @@
 package com.standardstate.couch4j.options;
 
+import com.standardstate.couch4j.util.Utils;
+
 public class AllDocumentsOptions {
 
     private Boolean descending = Boolean.FALSE;
@@ -28,6 +30,10 @@ public class AllDocumentsOptions {
 
     public void setIncludeDocs(Boolean includeDocs) {
         this.includeDocs = includeDocs;
+    }
+    
+    public String toString() {
+        return Utils.objectToJSON(this);
     }
     
 }

@@ -27,6 +27,11 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    public void constructorTest() {
+        assertNotNull("constructorTest()", new DocumentOperations());
+    }
+    
+    @Test
     public void createAndDeleteDocumentWithId() {
 
         final DateTime now = new DateTime();
@@ -137,7 +142,12 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
 
         final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session);
         assertEquals("getAllDocuments", 101, allDocuments.getRows().size());
-
+        assertEquals("getAllDocuments", new Integer(101), allDocuments.getTotalRows());
+        assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
+        
+        final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(session, 12);
+        assertEquals("twelveDocuments", 12, twelveDocuments.getRows().size());
+        
     }
 
 }

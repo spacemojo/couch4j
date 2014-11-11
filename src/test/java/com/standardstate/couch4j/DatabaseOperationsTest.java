@@ -10,6 +10,11 @@ import static org.junit.Assert.*;
 public class DatabaseOperationsTest extends BaseCouch4JTest {
 
     @Test
+    public void constructorTest() {
+        assertNotNull("constructorTest()", new DatabaseOperations());
+    }
+    
+    @Test
     public void getDatabaseWelcome() {
         
         final Welcome serverWelcome = DatabaseOperations.getServerWelcome(session);
@@ -34,6 +39,8 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
         
         final Information systemInformation = DatabaseOperations.getSystemInformation(session);
         assertNotNull("getDatabaseInformation", systemInformation);
+        System.out.println(systemInformation.toString());
+        System.out.println("Data size : " + systemInformation.getData_size());
         
     }
     
@@ -59,6 +66,7 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
         
         final Information databaseInformation = DatabaseOperations.getDatabaseInformation(session, TEST_DATABASE_NAME);
         assertEquals("getDatabaseInformation", TEST_DATABASE_NAME, databaseInformation.getDb_name());
+        System.out.println(databaseInformation.toString());
         
         final OperationResponse deleteDatabase = DatabaseOperations.deleteDatabase(session, TEST_DATABASE_NAME);
         assertTrue("getDatabaseInformation", deleteDatabase.isOk());
