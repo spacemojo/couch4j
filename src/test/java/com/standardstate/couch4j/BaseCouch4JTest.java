@@ -8,7 +8,7 @@ public class BaseCouch4JTest {
     static {
 
         session.setDatabase("c4jtest");
-        session.setHost("http://standardstate.com");
+        session.setHost("http://127.0.0.1");
         session.setPassword("rosadiso;102938*");
         session.setPort(5984);
         session.setUsername("couchForJay");

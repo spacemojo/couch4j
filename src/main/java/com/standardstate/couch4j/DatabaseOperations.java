@@ -2,24 +2,12 @@ package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.response.Information;
 import com.standardstate.couch4j.response.OperationResponse;
-import com.standardstate.couch4j.response.Welcome;
 import com.standardstate.couch4j.util.Utils;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
 public class DatabaseOperations {
-
-    public static Welcome getServerWelcome(final Session session) {
-        
-        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session));
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-        
-        Utils.setGETMethod(couchdbConnection);
-        
-        return Utils.readInputStream(couchdbConnection, Welcome.class);
-        
-    }
     
     public static List<String> listAllDatabases(final Session session) {
         

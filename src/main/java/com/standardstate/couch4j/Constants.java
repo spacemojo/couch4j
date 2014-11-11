@@ -23,4 +23,6 @@ public class Constants {
     
     public final static String PARAM_KEY = "key";
     
+    public final static String UUIDS = "_uuids";
+    
 }
