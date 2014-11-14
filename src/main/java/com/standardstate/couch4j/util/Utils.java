@@ -235,5 +235,13 @@ public class Utils {
         }
 
     }
+    
+    public static String listToString(final List<String> list) {
+        final StringBuilder builder = new StringBuilder();
+        for(String str : list) {
+            builder.append(str);
+        }
+        return builder.toString();
+    }
 
 }

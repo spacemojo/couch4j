@@ -9,7 +9,9 @@ import java.util.List;
 
 public class DatabaseOperations {
     
-    public static List<String> listAllDatabases(final Session session) {
+    private final static Session session = ConfigurationManager.getSession();
+    
+    public static List<String> listAllDatabases() {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + Constants.ALL_DBS);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -21,7 +23,7 @@ public class DatabaseOperations {
         
     }
     
-    public static Information getSystemInformation(final Session session) {
+    public static Information getSystemInformation() {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -33,15 +35,15 @@ public class DatabaseOperations {
         
     }
     
-    public static OperationResponse createDatabase(final Session session, final String name) {    
-        return createOrDeleteDatabase(session, name, Constants.PUT);        
+    public static OperationResponse createDatabase(final String name) {    
+        return createOrDeleteDatabase(name, Constants.PUT);        
     }
     
-    public static OperationResponse deleteDatabase(final Session session, final String name) {    
-        return createOrDeleteDatabase(session, name, Constants.DELETE);        
+    public static OperationResponse deleteDatabase(final String name) {    
+        return createOrDeleteDatabase(name, Constants.DELETE);        
     }
     
-    private static OperationResponse createOrDeleteDatabase(final Session session, final String name, final String method) {
+    private static OperationResponse createOrDeleteDatabase(final String name, final String method) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + name);
             
@@ -62,7 +64,7 @@ public class DatabaseOperations {
         }                
     }
     
-    public static Information getDatabaseInformation(final Session session, final String databaseName) {
+    public static Information getDatabaseInformation(final String databaseName) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + databaseName);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);

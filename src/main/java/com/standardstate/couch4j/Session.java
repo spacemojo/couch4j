@@ -1,9 +1,5 @@
 package com.standardstate.couch4j;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 public class Session {
 
     private String host = null;
@@ -51,5 +47,5 @@ public class Session {
     public void setPort(final int port) {
         this.port = port;
     }
-
+    
 }

@@ -1,6 +1,8 @@
 package com.standardstate.couch4j.util;
 
 import com.standardstate.couch4j.mock.MockObject;
+import java.util.ArrayList;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -70,6 +72,19 @@ public class UtilsTest {
     @Test(expected = RuntimeException.class)
     public void createURLFailure() {
         Utils.createURL("htp:/thisisamalformedurl");
+    }
+
+    @Test
+    public void listToString() {
+        
+        final List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.add("4");
+        
+        assertEquals("listToString()", "1234", Utils.listToString(list));
+        
     }
     
 }

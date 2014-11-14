@@ -18,13 +18,12 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
     public static void createDatabase() {
-        DatabaseOperations.createDatabase(session, TEST_DATABASE_NAME);
-        session.setDatabase(TEST_DATABASE_NAME);
+        DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
     }
 
     @AfterClass
     public static void afterClass() {
-        DatabaseOperations.deleteDatabase(session, TEST_DATABASE_NAME);
+        DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
     }
 
     @Test
@@ -42,11 +41,11 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         Utils.appendMapFunctionToView(designDocument, "bydate", "function(doc){emit(doc.date, doc);}");
         Utils.appendMapFunctionToView(designDocument, "byname", "function(doc){emit(doc.name, doc);}");
 
-        final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(session, designDocument);
+        final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(designDocument);
         assertTrue("createDesignDocumentTest(isOk)", operationResponse.isOk());
         assertEquals("createDesignDocumentTest(getId)", "_design/users", operationResponse.getId());
 
-        final DesignDocument createdDesignDocument = DesignDocumentOperations.getDesignDocument(session, "users");
+        final DesignDocument createdDesignDocument = DesignDocumentOperations.getDesignDocument("users");
         assertEquals("createDesignDocumentTest(getId from fetched)", "_design/users", createdDesignDocument.get_id());
 
         // add a bunch of documents to fetch with the view
@@ -57,15 +56,15 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
             mock.setIntValue(i);
             mock.setName("Mock document " + i);
             mock.setType("mock");
-            DocumentOperations.createDocument(session, mock);
+            DocumentOperations.createDocument(mock);
         }
         // call a view ...
-        final List<MockObject> mockObjects = DesignDocumentOperations.callView(session, "_design/users", "byname", MockObject.class);
+        final List<MockObject> mockObjects = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class);
         System.out.println("MockObjects : " + mockObjects.size());
 
         final Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_KEY, "Mock document 3");
-        final List<MockObject> calledWithParameters = DesignDocumentOperations.callView(session, "_design/users", "byname", MockObject.class, parameters);
+        final List<MockObject> calledWithParameters = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class, parameters);
         System.out.println(calledWithParameters.get(0));
 
     }
@@ -77,7 +76,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         validation.set_id("_design/uservalidation");
         validation.setValidate_doc_update("function(newDoc, oldDoc, usrCtx){if(!newDoc.type){throw { \"forbidden\":\"Documents need a type\" };}}");
 
-        final OperationResponse createResponse = DesignDocumentOperations.createValidationDocument(session, validation);
+        final OperationResponse createResponse = DesignDocumentOperations.createValidationDocument(validation);
         assertTrue("createValidationDocumentTest()", createResponse.isOk());
 
     }

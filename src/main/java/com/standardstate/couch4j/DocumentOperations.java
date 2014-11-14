@@ -12,7 +12,9 @@ import java.util.Map;
 
 public class DocumentOperations {
        
-    public static OperationResponse createDocumentWithId(final Session session, final Object toCreate, final String id) {
+    private final static Session session = ConfigurationManager.getSession();
+    
+    public static OperationResponse createDocumentWithId(final Object toCreate, final String id) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -27,7 +29,7 @@ public class DocumentOperations {
         
     }
     
-    public static OperationResponse createDocument(final Session session, final Object toCreate) {
+    public static OperationResponse createDocument(final Object toCreate) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -42,15 +44,15 @@ public class DocumentOperations {
         
     } 
     
-    public static AllDocuments getAllDocuments(final Session session) {
-        return getAllDocuments(session, 0, Boolean.FALSE);
+    public static AllDocuments getAllDocuments() {
+        return getAllDocuments(0, Boolean.FALSE);
     }
     
-    public static AllDocuments getAllDocuments(final Session session, final int limit) {
-        return getAllDocuments(session, limit, Boolean.FALSE);
+    public static AllDocuments getAllDocuments(final int limit) {
+        return getAllDocuments(limit, Boolean.FALSE);
     }
     
-    public static AllDocuments getAllDocuments(final Session session, final int limit, final boolean descending) {
+    public static AllDocuments getAllDocuments(final int limit, final boolean descending) {
         
         final AllDocumentsOptions options = Utils.initAllDocumentsOptions(limit, descending, Boolean.TRUE);
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS + Utils.toQueryString(options));
@@ -72,7 +74,7 @@ public class DocumentOperations {
             
     }
     
-    public static <T> T getDocument(final Session session, final String id, final Class documentClass) {
+    public static <T> T getDocument(final String id, final Class documentClass) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -84,7 +86,7 @@ public class DocumentOperations {
         
     }
     
-    public static OperationResponse updateDocument(final Session session, final String id, final Object document) {
+    public static OperationResponse updateDocument(final String id, final Object document) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -99,7 +101,7 @@ public class DocumentOperations {
         
     }
     
-    public static OperationResponse deleteDocument(final Session session, final String id, final String revision) {
+    public static OperationResponse deleteDocument(final String id, final String revision) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id + "?rev=" + revision);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);

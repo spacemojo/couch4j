@@ -15,8 +15,9 @@ import java.util.Map;
 public class DesignDocumentOperations {
 
     private final static String ENCODING = "UTF-8";
+    private final static Session session = ConfigurationManager.getSession();
     
-    public static OperationResponse createDesignDocument(final Session session, final DesignDocument document) {
+    public static OperationResponse createDesignDocument(final DesignDocument document) {
         
         final String createDesignURL = Utils.createDesignDocumentURL(session, document.get_id());
         
@@ -33,7 +34,7 @@ public class DesignDocumentOperations {
         
     }
     
-    public static OperationResponse createValidationDocument(final Session session, final ValidationDocument document) {
+    public static OperationResponse createValidationDocument(final ValidationDocument document) {
         
         final String createDesignURL = Utils.createDesignDocumentURL(session, document.get_id());
         
@@ -50,7 +51,7 @@ public class DesignDocumentOperations {
         
     }
     
-    public static DesignDocument getDesignDocument(final Session session, final String documentName) {
+    public static DesignDocument getDesignDocument(final String documentName) {
         
         final String getDesignURL = Utils.createDesignDocumentURL(session, "_design/" + documentName);
         
@@ -64,11 +65,11 @@ public class DesignDocumentOperations {
         
     }
     
-    public static <T> List<T> callView(final Session session, final String designDocumentId, final String viewName, final Class documentClass) {
-        return callView(session, designDocumentId, viewName, documentClass, null);
+    public static <T> List<T> callView(final String designDocumentId, final String viewName, final Class documentClass) {
+        return callView(designDocumentId, viewName, documentClass, null);
     }
     
-    public static <T> List<T> callView(final Session session, final String designDocumentId, final String viewName, final Class documentClass, final Map<String, String> parameters) {
+    public static <T> List<T> callView(final String designDocumentId, final String viewName, final Class documentClass, final Map<String, String> parameters) {
         
         final List<T> documents = new ArrayList<>();
         final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName + parametersToQueryString(parameters));

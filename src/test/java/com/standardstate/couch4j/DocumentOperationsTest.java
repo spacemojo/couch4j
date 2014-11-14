@@ -14,16 +14,14 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
     public static void createTestDatabase() {
-        final OperationResponse createResponse = DatabaseOperations.createDatabase(session, TEST_DATABASE_NAME);
+        final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
         assertEquals("createTestDatabase", true, createResponse.isOk());
-        session.setDatabase(TEST_DATABASE_NAME);
     }
 
     @AfterClass
     public static void deleteTestDatabase() {
-        final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(session, TEST_DATABASE_NAME);
+        final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
         assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
-        session.setDatabase("");
     }
 
     @Test
@@ -42,14 +40,14 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setName("This is the name of the mock bean ... ");
         mock.set_id("1029384756");
 
-        final OperationResponse create = DocumentOperations.createDocumentWithId(session, mock, mock.get_id());
+        final OperationResponse create = DocumentOperations.createDocumentWithId(mock, mock.get_id());
         mock.set_rev(create.getRev());
         assertTrue("createAndDeleteDocumentWithId", create.isOk());
 
-        final MockObject fetched = DocumentOperations.getDocument(session, mock.get_id(), MockObject.class);
+        final MockObject fetched = DocumentOperations.getDocument(mock.get_id(), MockObject.class);
         assertEquals("createAndDeleteDocumentWithId", mock, fetched);
 
-        final OperationResponse deleteDocument = DocumentOperations.deleteDocument(session, mock.get_id(), mock.get_rev());
+        final OperationResponse deleteDocument = DocumentOperations.deleteDocument(mock.get_id(), mock.get_rev());
         assertTrue("createAndDeleteDocumentWithId", deleteDocument.isOk());
 
     }
@@ -64,15 +62,15 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setIntValue(12);
         mock.setName("This is the name of the mock bean ... ");
 
-        final OperationResponse createResponse = DocumentOperations.createDocument(session, mock);
+        final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         assertEquals("createAndDeleteDocument", true, createResponse.isOk());
         mock.set_id(createResponse.getId());
         mock.set_rev(createResponse.getRev());
 
-        final MockObject fetched = DocumentOperations.getDocument(session, mock.get_id(), MockObject.class);
+        final MockObject fetched = DocumentOperations.getDocument(mock.get_id(), MockObject.class);
         assertEquals("createAndDeleteDocument", mock, fetched);
 
-        final OperationResponse deleteDocument = DocumentOperations.deleteDocument(session, mock.get_id(), mock.get_rev());
+        final OperationResponse deleteDocument = DocumentOperations.deleteDocument(mock.get_id(), mock.get_rev());
         assertTrue("createAndDeleteDocument", deleteDocument.isOk());
 
     }
@@ -80,7 +78,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     @Test(expected = RuntimeException.class)
     public void getNonExistingDocument() {
 
-        final MockObject document = DocumentOperations.getDocument(session, "nonexisting", MockObject.class);
+        final MockObject document = DocumentOperations.getDocument("nonexisting", MockObject.class);
         fail("This test should have failed ... " + document);
 
     }
@@ -95,11 +93,11 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setIntValue(12);
         mock.setName("This is the name of the mock bean ... ");
 
-        final OperationResponse createResponse = DocumentOperations.createDocument(session, mock);
+        final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         mock.set_id(createResponse.getId());
         mock.set_rev(createResponse.getRev());
 
-        final OperationResponse createTwiceResponse = DocumentOperations.createDocumentWithId(session, mock, mock.get_id());
+        final OperationResponse createTwiceResponse = DocumentOperations.createDocumentWithId(mock, mock.get_id());
         fail("This test shoudl have failed : " + createTwiceResponse.toString());
 
     }
@@ -114,15 +112,15 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setIntValue(12);
         mock.setName("This is the name of the mock bean ... ");
 
-        final OperationResponse createResponse = DocumentOperations.createDocument(session, mock);
+        final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         mock.set_id(createResponse.getId());
         mock.set_rev(createResponse.getRev());
 
         mock.setName("This is an UPDATED name .. ");
-        final OperationResponse updateResponse = DocumentOperations.updateDocument(session, mock.get_id(), mock);
+        final OperationResponse updateResponse = DocumentOperations.updateDocument(mock.get_id(), mock);
         assertTrue(updateResponse.isOk());
 
-        final MockObject document = DocumentOperations.getDocument(session, mock.get_id(), MockObject.class);
+        final MockObject document = DocumentOperations.getDocument(mock.get_id(), MockObject.class);
         assertEquals("updateDocument()", document.get_id(), mock.get_id());
         assertEquals("updateDocument()", document.getName(), mock.getName());
 
@@ -137,15 +135,15 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
             mock.setDate(new DateTime());
             mock.setIntValue(i);
             mock.setName("This is the name of the mock bean ... " + i);
-            DocumentOperations.createDocument(session, mock);
+            DocumentOperations.createDocument(mock);
         }
 
-        final AllDocuments allDocuments = DocumentOperations.getAllDocuments(session);
+        final AllDocuments allDocuments = DocumentOperations.getAllDocuments();
         assertEquals("getAllDocuments", 101, allDocuments.getRows().size());
         assertEquals("getAllDocuments", new Integer(101), allDocuments.getTotalRows());
         assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
         
-        final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(session, 12);
+        final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(12);
         assertEquals("twelveDocuments", 12, twelveDocuments.getRows().size());
         
     }

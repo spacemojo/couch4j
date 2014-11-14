@@ -1,6 +1,5 @@
 package com.standardstate.couch4j;
 
-import static com.standardstate.couch4j.BaseCouch4JTest.session;
 import com.standardstate.couch4j.response.UUIDS;
 import com.standardstate.couch4j.response.Welcome;
 import static org.junit.Assert.assertEquals;
@@ -18,7 +17,7 @@ public class StatusOperationsTest {
     @Test
     public void getWelcome() {
 
-        final Welcome serverWelcome = StatusOperations.getWelcome(session);
+        final Welcome serverWelcome = StatusOperations.getWelcome();
         assertEquals("getWelcome(1)", "Welcome", serverWelcome.getCouchdb());
         assertFalse("getWelcome(2)", serverWelcome.getVersion().isEmpty());
 
@@ -28,7 +27,7 @@ public class StatusOperationsTest {
     public void getUUIDS() {
         
         final int count = 3;
-        final UUIDS uuids = StatusOperations.getUUIDS(session, count);
+        final UUIDS uuids = StatusOperations.getUUIDS(count);
         assertEquals("getUUIDS()", count, uuids.getUuids().length);
         
     }

@@ -8,7 +8,9 @@ import java.net.URL;
 
 public class StatusOperations {
 
-    public static Welcome getWelcome(final Session session) {
+    private final static Session session = ConfigurationManager.getSession();
+    
+    public static Welcome getWelcome() {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -19,7 +21,7 @@ public class StatusOperations {
         
     }
     
-    public static UUIDS getUUIDS(final Session session, int count) {
+    public static UUIDS getUUIDS(int count) {
         
         final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + Constants.UUIDS + "?count=" + count);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
