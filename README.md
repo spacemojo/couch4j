@@ -1,7 +1,7 @@
 couch4j
 =======
 To start, define a configuration file (config.json) located at "~/.couch4j/config.json"
-```java
+```json
 {
     "test": {
 
@@ -10,7 +10,7 @@ To start, define a configuration file (config.json) located at "~/.couch4j/confi
 
     }
 }
-```java
+```
 
 ```java
 // To create a CouchDB database
