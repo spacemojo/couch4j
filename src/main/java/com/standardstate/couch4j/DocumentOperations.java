@@ -106,6 +106,20 @@ public class DocumentOperations {
         
     }
 
+    public static OperationResponse deleteAttachment(final AbstractCouchDBDocument document, final String name) {
+        
+        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + "?rev=" + document.get_rev();
+        
+        final URL couchdbURL = Utils.createURL(url);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+
+        Utils.setDELETEMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+
+        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
+        
+    }
+    
     public static OperationResponse updateDocument(final AbstractCouchDBDocument document) {
 
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + document.get_id());

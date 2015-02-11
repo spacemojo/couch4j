@@ -128,7 +128,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
-    public void addAttachmentTest() throws IOException {
+    public void attachmentTest() throws IOException {
         
         final DateTime now = new DateTime();
         final MockObject mock = new MockObject();
@@ -157,11 +157,20 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         assertTrue("Digest", attachment.getDigest().startsWith("md5"));
         assertTrue("Stub", attachment.isStub());
         
+        withAttachments.setName("Yet another name ... ");
+        DocumentOperations.updateDocument(withAttachments);
+        
+        final MockObject modifiedWithAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
+        final OperationResponse deleteResponse = DocumentOperations.deleteAttachment(modifiedWithAttachments, "dog.jpg");
+        assertTrue("deleteResponse", deleteResponse.isOk());
+        
     }
     
     @Test
     public void getAllDocuments() throws IOException {
 
+        final int startsize = DocumentOperations.getAllDocuments().getRows().size();
+        
         for (int i = 0; i < 100; i++) {
             final MockObject mock = new MockObject();
             mock.setActive(Boolean.TRUE);
@@ -172,8 +181,8 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         }
 
         final AllDocuments allDocuments = DocumentOperations.getAllDocuments();
-        assertEquals("getAllDocuments", 102, allDocuments.getRows().size());
-        assertEquals("getAllDocuments", new Integer(102), allDocuments.getTotalRows());
+        assertEquals("getAllDocuments", (startsize + 100), allDocuments.getRows().size());
+        assertEquals("getAllDocuments", new Integer((startsize + 100)), allDocuments.getTotalRows());
         assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
         
         final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(12);
