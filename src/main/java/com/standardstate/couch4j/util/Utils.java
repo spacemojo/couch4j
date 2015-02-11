@@ -9,8 +9,13 @@ import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.options.AllDocumentsOptions;
 import com.standardstate.couch4j.response.AllDocuments;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -26,6 +31,45 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Utils {
 
+    public static byte[] parseFile(final File file) {
+
+        FileInputStream input = null;
+        ByteArrayOutputStream output = null;
+
+        try {
+
+            byte[] fileBytes = new byte[8192];
+            input = new FileInputStream(file);
+            output = new ByteArrayOutputStream();
+
+            int b = 0;
+            while ((b = input.read(fileBytes)) != -1) {
+                output.write(fileBytes, 0, b);
+            }
+
+            return output.toByteArray();
+            
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        } finally {
+            safeClose(input);
+            safeClose(output);
+        }
+
+    }
+
+    private static void safeClose(final InputStream stream) {
+        if(stream != null) {
+            try { stream.close(); } catch (IOException e) { }
+        }
+    }
+    
+    private static void safeClose(final OutputStream stream) {
+        if(stream != null) {
+            try { stream.flush(); stream.close(); } catch (IOException e) { }
+        }
+    }
+    
     public static String objectToJSON(final Object object) {
 
         final ObjectMapper mapper = new ObjectMapper();
@@ -116,6 +160,10 @@ public class Utils {
         setHeader(couchdbConnection, "Content-Type", "application/json");
     }
 
+    public static void setContentTypeHeader(final HttpURLConnection couchdbConnection, final String contentType) {
+        setHeader(couchdbConnection, "Content-Type", contentType);
+    }
+    
     public static void setAuthenticationHeader(final HttpURLConnection couchdbConnection, final Session session) {
         final String userCredentials = session.getUsername() + ":" + session.getPassword();
         final String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
@@ -133,10 +181,22 @@ public class Utils {
     public static void writeToConnection(final HttpURLConnection couchdbConnection, final String content) {
         try {
             couchdbConnection.setDoOutput(true);
-            final DataOutputStream wr = new DataOutputStream(couchdbConnection.getOutputStream());
-            wr.writeBytes(content);
-            wr.flush();
-            wr.close();
+            final DataOutputStream dataOutputStream = new DataOutputStream(couchdbConnection.getOutputStream());
+            dataOutputStream.writeBytes(content);
+            dataOutputStream.flush();
+            dataOutputStream.close();
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+    }
+    
+    public static void writeToConnection(final HttpURLConnection couchdbConnection, final byte[] content) {
+        try {
+            couchdbConnection.setDoOutput(true);
+            final DataOutputStream dataOutputStream = new DataOutputStream(couchdbConnection.getOutputStream());
+            dataOutputStream.write(content, 0, content.length);
+            dataOutputStream.flush();
+            dataOutputStream.close();
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -160,6 +220,7 @@ public class Utils {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             return (T) mapper.readValue(couchdbConnection.getInputStream(), targetClass);
+
         } catch (IOException e) {
             throw parseError(couchdbConnection, e);
         }
@@ -235,10 +296,10 @@ public class Utils {
         }
 
     }
-    
+
     public static String listToString(final List<String> list) {
         final StringBuilder builder = new StringBuilder();
-        for(String str : list) {
+        for (String str : list) {
             builder.append(str);
         }
         return builder.toString();

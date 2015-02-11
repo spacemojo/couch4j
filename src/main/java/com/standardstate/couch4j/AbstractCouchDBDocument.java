@@ -1,10 +1,16 @@
 package com.standardstate.couch4j;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Map;
+
 public abstract class AbstractCouchDBDocument {
     
     private String _id = null;
     private String _rev = null;
-
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Map<String, Attachment> _attachments = null;
+    
     public String get_id() {
         return _id;
     }
@@ -19,6 +25,14 @@ public abstract class AbstractCouchDBDocument {
 
     public void set_rev(final String _rev) {
         this._rev = _rev;
+    }
+    
+    public Map<String, Attachment> get_attachments() {
+        return this._attachments;
+    }
+    
+    public void set_attachments(final Map<String, Attachment> attachments) {
+        this._attachments = attachments;
     }
     
 }

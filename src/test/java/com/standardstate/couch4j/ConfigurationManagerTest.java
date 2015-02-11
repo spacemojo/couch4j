@@ -5,7 +5,6 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ConfigurationManagerTest extends BaseCouch4JTest {
@@ -32,7 +31,7 @@ public class ConfigurationManagerTest extends BaseCouch4JTest {
         assertTrue("rename to original ", renamed.renameTo(configFile));
         
         final Session session = ConfigurationManager.getSession();
-        assertEquals("database name ", "c4jtest",session.getDatabase());
+        assertEquals("database name ", "c4jtest", session.getDatabase());
         
     }
 

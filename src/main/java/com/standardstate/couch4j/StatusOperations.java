@@ -32,5 +32,9 @@ public class StatusOperations {
         return Utils.readInputStream(couchdbConnection, UUIDS.class);
         
     }
+
+    public static String getUUID() {
+        return getUUIDS(1).getUuids()[0];
+    }
     
 }

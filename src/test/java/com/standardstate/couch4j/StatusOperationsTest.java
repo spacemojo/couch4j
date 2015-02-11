@@ -31,5 +31,13 @@ public class StatusOperationsTest {
         assertEquals("getUUIDS()", count, uuids.getUuids().length);
         
     }
+
+    @Test
+    public void getUUID() {
+        
+        final String uuid = StatusOperations.getUUID();
+        assertNotNull("getUUID()", uuid);
+        
+    }
     
 }
