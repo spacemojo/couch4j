@@ -26,11 +26,7 @@ public class DocumentOperations {
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        final String rev = toCreate.get_rev();
-        toCreate.set_rev(null);
-        final String json = Utils.objectToJSON(toCreate);
-        toCreate.set_rev(rev);
-        
+        final String json = Utils.objectToJSONWithoutRev(toCreate);
         Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
@@ -46,11 +42,7 @@ public class DocumentOperations {
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
-        final String id = toCreate.get_id();
-        toCreate.set_id(null);
-        final String json = Utils.objectToJSON(toCreate);
-        toCreate.set_id(id);
-                
+        final String json = Utils.objectToJSONWithoutId(toCreate);
         Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);

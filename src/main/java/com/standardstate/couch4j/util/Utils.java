@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
@@ -25,8 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
 
 public class Utils {
@@ -77,6 +76,30 @@ public class Utils {
         }
     }
 
+    public static String objectToJSONWithoutRev(final DesignDocument document) {
+        final String rev = document.get_rev();
+        document.set_rev(null);
+        final String json = Utils.objectToJSON(document);
+        document.set_rev(null);
+        return json;
+    }
+
+    public static String objectToJSONWithoutRev(final AbstractCouchDBDocument document) {
+        final String rev = document.get_rev();
+        document.set_rev(null);
+        final String json = Utils.objectToJSON(document);
+        document.set_rev(null);
+        return json;
+    }
+
+    public static String objectToJSONWithoutId(final AbstractCouchDBDocument document) {
+        final String id = document.get_id();
+        document.set_id(null);
+        final String json = Utils.objectToJSON(document);
+        document.set_id(id);
+        return json;
+    }
+    
     public static String objectToJSON(final Object object) {
 
         final ObjectMapper mapper = new ObjectMapper();
