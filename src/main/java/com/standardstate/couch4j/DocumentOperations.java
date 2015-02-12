@@ -17,7 +17,7 @@ public class DocumentOperations {
 
     private final static Session session = ConfigurationManager.getSession();
 
-    public static OperationResponse createDocumentWithId(final Object toCreate, final String id) {
+    public static OperationResponse createDocumentWithId(final AbstractCouchDBDocument toCreate, final String id) {
 
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -26,14 +26,18 @@ public class DocumentOperations {
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
+        final String rev = toCreate.get_rev();
+        toCreate.set_rev(null);
         final String json = Utils.objectToJSON(toCreate);
-        Utils.writeToConnection(couchdbConnection, Utils.removeRev(json));
+        toCreate.set_rev(rev);
+        
+        Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
 
     }
 
-    public static OperationResponse createDocument(final Object toCreate) {
+    public static OperationResponse createDocument(final AbstractCouchDBDocument toCreate) {
 
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -42,8 +46,12 @@ public class DocumentOperations {
         Utils.setJSONContentHeader(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
+        final String id = toCreate.get_id();
+        toCreate.set_id(null);
         final String json = Utils.objectToJSON(toCreate);
-        Utils.writeToConnection(couchdbConnection, Utils.removeId(Utils.removeRev(json)));
+        toCreate.set_id(id);
+                
+        Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
 
@@ -129,8 +137,12 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
         Utils.setJSONContentHeader(couchdbConnection);
 
+        final String id = document.get_id();
+        document.set_id(null);
         final String json = Utils.objectToJSON(document);
-        Utils.writeToConnection(couchdbConnection, Utils.removeId(json));
+        document.set_id(id);
+        
+        Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
 

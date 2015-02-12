@@ -55,40 +55,6 @@ public class UtilsTest {
     }
     
     @Test
-    public void removeRevTest() {
-        
-        final String jsonObj = Utils.objectToJSON(obj);
-        
-        String expected = "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
-        System.out.println(expected);
-        System.out.println(jsonObj);
-        assertEquals("removeRevTest", expected, jsonObj);
-        
-        expected = "{\"_id\":\"1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
-        System.out.println(expected);
-        System.out.println(Utils.removeRev(jsonObj));
-        assertEquals("removeRevTest", expected, Utils.removeRev(jsonObj));
-        
-    }
-    
-    @Test
-    public void removeIdTest() {
-        
-        final String jsonObj = Utils.objectToJSON(obj);
-        
-        String expected = "{\"_id\":\"1029384756\",\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
-        System.out.println(expected);
-        System.out.println(jsonObj);
-        assertEquals("removeIdTest", expected, jsonObj);
-        
-        expected = "{\"_rev\":\"1-1029384756\",\"type\":\"mock\",\"name\":\"MockObjectName\",\"intValue\":12,\"date\":\"" + obj.getDate().toString() + "\",\"active\":false}";
-        System.out.println(expected);
-        System.out.println(Utils.removeId(jsonObj));
-        assertEquals("removeIdTest", expected, Utils.removeId(jsonObj));
-        
-    }
-    
-    @Test
     public void constructorTest() {
         assertNotNull("constructorTest()", new Utils());
     }

@@ -5,8 +5,14 @@ import java.util.Map;
 
 public abstract class AbstractCouchDBDocument {
     
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String _id = null;
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String _rev = null;
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String type = this.getClass().getName();
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, Attachment> _attachments = null;
@@ -25,6 +31,14 @@ public abstract class AbstractCouchDBDocument {
 
     public void set_rev(final String _rev) {
         this._rev = _rev;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
     }
     
     public Map<String, Attachment> get_attachments() {

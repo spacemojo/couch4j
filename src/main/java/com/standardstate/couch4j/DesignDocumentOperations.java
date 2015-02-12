@@ -27,9 +27,13 @@ public class DesignDocumentOperations {
         Utils.setPUTMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
         
-        final String jsonContent = Utils.removeRev(Utils.objectToJSON(document));
-        Utils.writeToConnection(couchdbConnection, jsonContent);
-
+        final String rev = document.get_rev();
+        document.set_rev(null);
+        final String json = Utils.objectToJSON(document);
+        document.set_rev(null);
+        
+        Utils.writeToConnection(couchdbConnection, json);
+        
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
         
     }
@@ -44,7 +48,7 @@ public class DesignDocumentOperations {
         Utils.setPUTMethod(couchdbConnection);
         Utils.setAuthenticationHeader(couchdbConnection, session);
         
-        final String jsonContent = Utils.removeRev(Utils.objectToJSON(document));
+        final String jsonContent = Utils.objectToJSON(document);
         Utils.writeToConnection(couchdbConnection, jsonContent);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);

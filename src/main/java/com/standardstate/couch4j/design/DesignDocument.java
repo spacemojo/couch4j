@@ -1,13 +1,18 @@
 package com.standardstate.couch4j.design;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.standardstate.couch4j.util.ConstrainedMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DesignDocument {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String _id = null;
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String _rev = null;
+    
     private String language = "javascript";
     
     private Map<String, ConstrainedMap> views = new HashMap<>();

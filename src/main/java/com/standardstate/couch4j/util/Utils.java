@@ -48,7 +48,7 @@ public class Utils {
             }
 
             return output.toByteArray();
-            
+
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         } finally {
@@ -59,17 +59,24 @@ public class Utils {
     }
 
     private static void safeClose(final InputStream stream) {
-        if(stream != null) {
-            try { stream.close(); } catch (IOException e) { }
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+            }
         }
     }
-    
+
     private static void safeClose(final OutputStream stream) {
-        if(stream != null) {
-            try { stream.flush(); stream.close(); } catch (IOException e) { }
+        if (stream != null) {
+            try {
+                stream.flush();
+                stream.close();
+            } catch (IOException e) {
+            }
         }
     }
-    
+
     public static String objectToJSON(final Object object) {
 
         final ObjectMapper mapper = new ObjectMapper();
@@ -85,31 +92,6 @@ public class Utils {
             throw new RuntimeException(e);
         }
         return writer.toString();
-    }
-
-    public static String removeRev(final String json) {
-        return removeJSONField(json, Constants.REVISION_FIELD);
-    }
-
-    public static String removeId(final String json) {
-        return removeJSONField(json, Constants.ID_FIELD);
-    }
-
-    public static String removeJSONField(final String json, final String fieldName) {
-
-        final Pattern pattern = Pattern.compile("(\"" + fieldName + "\":\"[^\"]*[\"]?[,}]?)");
-
-        final StringBuffer insideBuffer = new StringBuffer();
-        final Matcher insideMatcher = pattern.matcher(json.replace("\":null", "\":\"null\""));
-
-        while (insideMatcher.find()) {
-            insideMatcher.appendReplacement(insideBuffer, "");
-        }
-
-        insideMatcher.appendTail(insideBuffer);
-
-        return insideBuffer.toString();
-
     }
 
     public static String createDatabaseURL(final Session session) {
@@ -163,7 +145,7 @@ public class Utils {
     public static void setContentTypeHeader(final HttpURLConnection couchdbConnection, final String contentType) {
         setHeader(couchdbConnection, "Content-Type", contentType);
     }
-    
+
     public static void setAuthenticationHeader(final HttpURLConnection couchdbConnection, final Session session) {
         final String userCredentials = session.getUsername() + ":" + session.getPassword();
         final String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
@@ -189,7 +171,7 @@ public class Utils {
             throw new RuntimeException(ioe);
         }
     }
-    
+
     public static void writeToConnection(final HttpURLConnection couchdbConnection, final byte[] content) {
         try {
             couchdbConnection.setDoOutput(true);
