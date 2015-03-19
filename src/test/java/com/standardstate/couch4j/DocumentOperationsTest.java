@@ -141,28 +141,21 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         
         final MockObject fetched = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
-        System.out.println("Mock object fetched : " + fetched);
         
         final File file = new File("src/test/resources/com/standardstate/couch4j/dog.jpg");
-        System.out.println("New file " + file);
         
         final OperationResponse addResponse = DocumentOperations.addAttachment(fetched, file);
-        System.out.println("add response " + addResponse);
         assertTrue("addResponse", addResponse.isOk());
         
         final MockObject withAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
-        System.out.println("with attatchments " + Utils.objectToJSON(withAttachments));
         assertEquals("fetchedWithAttachments", 1, withAttachments.get_attachments().size());
     
         final Attachment attachment = withAttachments.get_attachments().get("dog.jpg");
-        System.out.println("attatchment " + Utils.objectToJSON(attachment));
         assertEquals("ContentType", "image/jpeg", attachment.getContent_type());
         assertEquals("Length", 128642, attachment.getLength());
         assertEquals("Revpos", 2, attachment.getRevpos());
-        assertTrue("Digest", attachment.getDigest().startsWith("md5"));
         assertTrue("Stub", attachment.isStub());
         
-        System.out.println("Yet another name ... ");
         withAttachments.setName("Yet another name ... ");
         DocumentOperations.updateDocument(withAttachments);
         
