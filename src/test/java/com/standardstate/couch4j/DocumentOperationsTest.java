@@ -138,12 +138,13 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setName("This is the name of the mock bean ... ");
         
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
-        System.out.println(createResponse.getId());
-        System.out.println(createResponse.getRev());
         
         final MockObject fetched = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
+        System.out.println("Mock object fetched : " + fetched);
         
         final File file = new File("src/test/resources/com/standardstate/couch4j/dog.jpg");
+        System.out.println("New file " + file);
+        
         final OperationResponse addResponse = DocumentOperations.addAttachment(fetched, file);
         assertTrue("addResponse", addResponse.isOk());
         
