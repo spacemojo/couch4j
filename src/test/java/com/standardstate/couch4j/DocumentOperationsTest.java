@@ -146,6 +146,8 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         System.out.println("New file " + file);
         
         final OperationResponse addResponse = DocumentOperations.addAttachment(fetched, file);
+        System.out.println("add response " + addResponse);
+        System.out.println("add response " + addResponse.toString());
         assertTrue("addResponse", addResponse.isOk());
         
         final MockObject withAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
