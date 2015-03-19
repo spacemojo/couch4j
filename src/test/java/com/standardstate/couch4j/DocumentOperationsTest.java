@@ -147,10 +147,10 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         
         final OperationResponse addResponse = DocumentOperations.addAttachment(fetched, file);
         System.out.println("add response " + addResponse);
-        System.out.println("add response " + addResponse.toString());
         assertTrue("addResponse", addResponse.isOk());
         
         final MockObject withAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
+        System.out.println("with attatchments " + withAttachments);
         assertEquals("fetchedWithAttachments", 1, withAttachments.get_attachments().size());
     
         final Attachment attachment = withAttachments.get_attachments().get("dog.jpg");
