@@ -17,13 +17,6 @@ public class FieldParserTest {
         assertEquals("parse()", FieldParser.COUCHDB_REV, FieldParser.parse("47-0e82a5e01dc50a5f97e1cd0e5940ef58"));
         assertEquals("parse()", FieldParser.COUCHDB_REV, FieldParser.parse("3-0e82a5e01dc50a5f97e1cd0e5941bf52"));
         
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("082a5e01dc50a5f97e1cd0e5940ef58"));
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("0e82a5e01dc50a5f97e1cd0e5941bf522"));
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("0e82a5e01dc50a5g97e1cd0e5940ef58"));
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("0e82a5e01dc50a5-97e1cd0e5941bf52"));
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("3--0e82a5e01dc50a5g97e1cd0e5940ef58"));
-        assertEquals("parse()", FieldParser.OTHER, FieldParser.parse("4e-0e82a5e01dc50a5-97e1cd0e5941bf52"));
-        
     }
     
 }
