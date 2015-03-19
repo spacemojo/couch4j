@@ -3,6 +3,7 @@ package com.standardstate.couch4j;
 import com.standardstate.couch4j.mock.MockObject;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
+import com.standardstate.couch4j.util.Utils;
 import java.io.File;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -150,7 +151,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         assertTrue("addResponse", addResponse.isOk());
         
         final MockObject withAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
-        System.out.println("with attatchments " + withAttachments);
+        System.out.println("with attatchments " + Utils.objectToJSON(withAttachments));
         assertEquals("fetchedWithAttachments", 1, withAttachments.get_attachments().size());
     
         final Attachment attachment = withAttachments.get_attachments().get("dog.jpg");
