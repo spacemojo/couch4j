@@ -155,12 +155,14 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         assertEquals("fetchedWithAttachments", 1, withAttachments.get_attachments().size());
     
         final Attachment attachment = withAttachments.get_attachments().get("dog.jpg");
+        System.out.println("attatchment " + Utils.objectToJSON(attachment));
         assertEquals("ContentType", "image/jpeg", attachment.getContent_type());
         assertEquals("Length", 128642, attachment.getLength());
         assertEquals("Revpos", 2, attachment.getRevpos());
         assertTrue("Digest", attachment.getDigest().startsWith("md5"));
         assertTrue("Stub", attachment.isStub());
         
+        System.out.println("Yet another name ... ");
         withAttachments.setName("Yet another name ... ");
         DocumentOperations.updateDocument(withAttachments);
         
