@@ -22,8 +22,6 @@ public class Constants {
     public final static String ID_FIELD = "_id";
     public final static String ATTACHMENTS_FIELD = "_attachments";
     
-    public final static String PARAM_KEY = "key";
-    
     public final static String UUIDS = "_uuids";
     
 }

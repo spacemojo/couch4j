@@ -8,7 +8,7 @@ import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
-import com.standardstate.couch4j.options.AllDocumentsOptions;
+import com.standardstate.couch4j.options.Options;
 import com.standardstate.couch4j.response.AllDocuments;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -18,10 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,8 @@ import java.util.TimeZone;
 import org.apache.commons.codec.binary.Base64;
 
 public class Utils {
+
+    private final static String ENCODING = "UTF-8";
 
     public static byte[] parseFile(final File file) {
 
@@ -41,7 +46,7 @@ public class Utils {
             input = new FileInputStream(file);
             output = new ByteArrayOutputStream();
 
-            int b = 0;
+            int b;
             while ((b = input.read(fileBytes)) != -1) {
                 output.write(fileBytes, 0, b);
             }
@@ -77,29 +82,23 @@ public class Utils {
     }
 
     public static String objectToJSONWithoutRev(final DesignDocument document) {
-        final String rev = document.get_rev();
         document.set_rev(null);
         final String json = Utils.objectToJSON(document);
-        document.set_rev(null);
         return json;
     }
 
     public static String objectToJSONWithoutRev(final AbstractCouchDBDocument document) {
-        final String rev = document.get_rev();
         document.set_rev(null);
         final String json = Utils.objectToJSON(document);
-        document.set_rev(null);
         return json;
     }
 
     public static String objectToJSONWithoutId(final AbstractCouchDBDocument document) {
-        final String id = document.get_id();
         document.set_id(null);
         final String json = Utils.objectToJSON(document);
-        document.set_id(id);
         return json;
     }
-    
+
     public static String objectToJSON(final Object object) {
 
         final ObjectMapper mapper = new ObjectMapper();
@@ -179,8 +178,48 @@ public class Utils {
         couchdbConnection.setRequestProperty(headerName, headerValue);
     }
 
-    public static String toQueryString(final AllDocumentsOptions options) {
-        return "?descending=" + options.isDescending() + "&include_docs=" + options.isIncludeDocs() + (options.getLimit() > 0 ? "&limit=" + options.getLimit() : "");
+    public static String toQueryString(final Options options) {
+
+        if (options != null) {
+            final Map<String, Object> parameters = new HashMap<>();
+            parameters.put("key", options.getKey());
+            parameters.put("descending", options.isDescending());
+            parameters.put("limit", options.getLimit());
+            parameters.put("include_docs", options.isIncludeDocs());
+            parameters.put("startkey", options.getStartKey());
+            parameters.put("endkey", options.getEndKey());
+            return toQueryString(parameters);
+        }
+        return "";
+
+    }
+
+    private static String toQueryString(final Map<String, Object> parameters) {
+
+        if (parameters == null || parameters.isEmpty()) {
+            return "";
+        } else {
+            final StringBuilder builder = new StringBuilder("?");
+            for (String key : parameters.keySet()) {
+                if (parameters.get(key) != null) {
+                    if (parameters.get(key).getClass().equals(Boolean.class) || parameters.get(key).getClass().equals(Integer.class)) {
+                        builder.append(key).append("=").append(safeEncodeUTF8(parameters.get(key).toString())).append("&");
+                    } else {
+                        builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key).toString())).append("\"&");
+                    }
+                }
+            }
+            return builder.toString().substring(0, (builder.length() - 1));
+        }
+
+    }
+
+    private static String safeEncodeUTF8(final String toEncode, final String... encoding) {
+        try {
+            return URLEncoder.encode(toEncode, (encoding.length == 1 ? encoding[0] : ENCODING));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void writeToConnection(final HttpURLConnection couchdbConnection, final String content) {
@@ -217,6 +256,7 @@ public class Utils {
 
     public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
         try {
+
             final ObjectMapper mapper = new ObjectMapper();
 
             mapper.registerModule(new JodaModule());
@@ -246,20 +286,12 @@ public class Utils {
         }
     }
 
-    public static AllDocuments initAllDocuments(final Map docs, final AllDocumentsOptions options) {
+    public static AllDocuments initAllDocuments(final Map docs, final Options options) {
         final AllDocuments allDocuments = new AllDocuments();
         allDocuments.setTotalRows((Integer) docs.get(Constants.TOTAL_ROWS));
         allDocuments.setOffset((Integer) docs.get(Constants.OFFSET));
         allDocuments.setOptions(options);
         return allDocuments;
-    }
-
-    public static AllDocumentsOptions initAllDocumentsOptions(final int limit, final boolean descending, final boolean includeDocs) {
-        final AllDocumentsOptions options = new AllDocumentsOptions();
-        options.setDescending(descending);
-        options.setIncludeDocs(includeDocs);
-        options.setLimit(limit);
-        return options;
     }
 
     public static void appendMapFunctionToView(final DesignDocument document, final String viewName, final String mapFunction) {

@@ -1,6 +1,6 @@
 package com.standardstate.couch4j;
 
-import com.standardstate.couch4j.options.AllDocumentsOptions;
+import com.standardstate.couch4j.options.Options;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
@@ -43,6 +43,7 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
         final String json = Utils.objectToJSONWithoutId(toCreate);
+        System.out.println("DocumentOperations.createDocument(\"" + json + "\");");
         Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
@@ -50,16 +51,11 @@ public class DocumentOperations {
     }
 
     public static AllDocuments getAllDocuments() {
-        return getAllDocuments(0, Boolean.FALSE);
+        return getAllDocuments(null);
     }
 
-    public static AllDocuments getAllDocuments(final int limit) {
-        return getAllDocuments(limit, Boolean.FALSE);
-    }
+    public static AllDocuments getAllDocuments(final Options options) {
 
-    public static AllDocuments getAllDocuments(final int limit, final boolean descending) {
-
-        final AllDocumentsOptions options = Utils.initAllDocumentsOptions(limit, descending, Boolean.TRUE);
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS + Utils.toQueryString(options));
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
