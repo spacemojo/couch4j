@@ -63,7 +63,7 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
         final Map docs = (Map) Utils.readInputStream(couchdbConnection, Object.class);
-        final AllDocuments allDocuments = Utils.initAllDocuments(docs, options);
+        final AllDocuments allDocuments = new AllDocuments((Integer) docs.get(Constants.TOTAL_ROWS), (Integer) docs.get(Constants.OFFSET), options);
 
         for (Object row : (List) docs.get(Constants.ROWS)) {
             final LinkedHashMap documentMap = (LinkedHashMap) ((LinkedHashMap) row).get(Constants.DOC);
@@ -74,7 +74,7 @@ public class DocumentOperations {
         return allDocuments;
 
     }
-
+    
     public static <T extends AbstractCouchDBDocument> T getDocument(final String id, final Class documentClass) {
 
         final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);

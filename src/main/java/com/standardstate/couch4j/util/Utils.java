@@ -9,7 +9,6 @@ import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.options.Options;
-import com.standardstate.couch4j.response.AllDocuments;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -196,21 +195,17 @@ public class Utils {
 
     private static String toQueryString(final Map<String, Object> parameters) {
 
-        if (parameters == null || parameters.isEmpty()) {
-            return "";
-        } else {
-            final StringBuilder builder = new StringBuilder("?");
-            for (String key : parameters.keySet()) {
-                if (parameters.get(key) != null) {
-                    if (parameters.get(key).getClass().equals(Boolean.class) || parameters.get(key).getClass().equals(Integer.class)) {
-                        builder.append(key).append("=").append(safeEncodeUTF8(parameters.get(key).toString())).append("&");
-                    } else {
-                        builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key).toString())).append("\"&");
-                    }
+        final StringBuilder builder = new StringBuilder("?");
+        for (String key : parameters.keySet()) {
+            if (parameters.get(key) != null) {
+                if (parameters.get(key).getClass().equals(Boolean.class) || parameters.get(key).getClass().equals(Integer.class)) {
+                    builder.append(key).append("=").append(safeEncodeUTF8(parameters.get(key).toString())).append("&");
+                } else {
+                    builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key).toString())).append("\"&");
                 }
             }
-            return builder.toString().substring(0, (builder.length() - 1));
         }
+        return builder.toString().substring(0, (builder.length() - 1));
 
     }
 
@@ -254,7 +249,7 @@ public class Utils {
         }
     }
 
-    public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
+    public static <T> T readInputStream(final InputStream stream, final Class targetClass) {
         try {
 
             final ObjectMapper mapper = new ObjectMapper();
@@ -264,13 +259,21 @@ public class Utils {
             mapper.setTimeZone(TimeZone.getDefault());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-            return (T) mapper.readValue(couchdbConnection.getInputStream(), targetClass);
+            return (T) mapper.readValue(stream, targetClass);
 
         } catch (IOException e) {
-            throw parseError(couchdbConnection, e);
+            throw new RuntimeException(e);
         }
     }
 
+    public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
+        try {
+            return readInputStream(couchdbConnection.getInputStream(), targetClass);
+        }catch(Exception e) {
+            throw parseError(couchdbConnection, e);
+        }
+    }
+    
     public static <T> T readString(final String jsonString, final Class targetClass) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -284,14 +287,6 @@ public class Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static AllDocuments initAllDocuments(final Map docs, final Options options) {
-        final AllDocuments allDocuments = new AllDocuments();
-        allDocuments.setTotalRows((Integer) docs.get(Constants.TOTAL_ROWS));
-        allDocuments.setOffset((Integer) docs.get(Constants.OFFSET));
-        allDocuments.setOptions(options);
-        return allDocuments;
     }
 
     public static void appendMapFunctionToView(final DesignDocument document, final String viewName, final String mapFunction) {
@@ -328,18 +323,11 @@ public class Utils {
                     + "\"reason\":\"" + error.get("reason") + "\","
                     + "\"method\":\"" + connection.getRequestMethod() + "\"}";
             return new RuntimeException(message, cause);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+            
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }
-
-    public static String listToString(final List<String> list) {
-        final StringBuilder builder = new StringBuilder();
-        for (String str : list) {
-            builder.append(str);
-        }
-        return builder.toString();
-    }
-
+    
 }

@@ -61,9 +61,4 @@ public class Options {
         this.endKey = endKey;
     }
 
-    @Override
-    public String toString() {
-        return Utils.objectToJSON(this);
-    }
-
 }

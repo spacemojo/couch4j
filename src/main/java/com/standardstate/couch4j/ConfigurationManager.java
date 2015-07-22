@@ -3,11 +3,9 @@ package com.standardstate.couch4j;
 import com.standardstate.couch4j.util.Utils;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class ConfigurationManager {
 
@@ -18,10 +16,7 @@ public class ConfigurationManager {
         try {
             
             final Path path = getConfigurationFilePath();
-            final List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-            final String json = Utils.listToString(lines);
-            
-            configuration = Utils.readString(json, Configuration.class);
+            configuration = Utils.readInputStream(Files.newInputStream(path), Configuration.class);
             
         } catch (IOException e) {
             configuration = null;

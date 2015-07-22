@@ -64,16 +64,11 @@ public class UtilsTest {
         Utils.createURL("htp:/thisisamalformedurl");
     }
 
-    @Test
-    public void listToString() {
+    @Test(expected = RuntimeException.class)
+    public void parseErrorFailure() {
         
-        final List<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-        
-        assertEquals("listToString()", "1234", Utils.listToString(list));
+        final RuntimeException parsedError = Utils.parseError(null, new RuntimeException());
+        fail("Test should have failed : " + parsedError);
         
     }
     

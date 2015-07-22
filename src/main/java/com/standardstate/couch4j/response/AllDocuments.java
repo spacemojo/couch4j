@@ -11,6 +11,16 @@ public class AllDocuments {
     private Integer offset = 0;
     private final List<String> rows = new ArrayList<>();
 
+    public AllDocuments() {
+
+    }
+
+    public AllDocuments(final Integer totalRows, final Integer offset, final Options options) {
+        this.totalRows = totalRows;
+        this.offset = offset;
+        this.options = options;
+    }
+
     public Options getOptions() {
         return options;
     }
@@ -42,5 +52,5 @@ public class AllDocuments {
     public List<String> getRows() {
         return this.rows;
     }
-    
+
 }
