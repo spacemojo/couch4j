@@ -22,16 +22,24 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         try {
             DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
         } catch (Exception e) {
-            System.out.println("Testing " + e.getMessage());
+            System.out.println("DesignDocumentOperationsTest 25 " + e.getMessage());
         }
-        final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
-        assertEquals("createTestDatabase", true, createResponse.isOk());
+        try {
+            final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
+            assertEquals("createTestDatabase", true, createResponse.isOk());
+        } catch (Exception e) {
+            System.out.println("DesignDocumentOperationsTest 31 " + e.getMessage());
+        }
     }
 
     @AfterClass
     public static void deleteTestDatabase() {
-        final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
-        assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
+        try {
+            final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
+            assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
+        } catch (Exception e) {
+            System.out.println("DesignDocumentOperationsTest 41 " + e.getMessage());
+        }
     }
 
     @Test
@@ -65,7 +73,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(designDocument);
 
         createDocuments();
-        
+
         assertTrue("createDesignDocumentTest(isOk)", operationResponse.isOk());
         assertEquals("createDesignDocumentTest(getId)", "_design/users", operationResponse.getId());
 
@@ -80,10 +88,10 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         options.setKey("Mock document 3");
         final List<MockObject> calledWithParameters = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class, options);
         assertEquals("calledWithParameters", "Mock document 3", calledWithParameters.get(0).getName());
-        
+
         final List<DesignDocument> allDesignDocuments = DesignDocumentOperations.getAllDesignDocuments();
         assertEquals("allDesignDocuments", 2, allDesignDocuments.size());
-        
+
     }
 
     @Test
