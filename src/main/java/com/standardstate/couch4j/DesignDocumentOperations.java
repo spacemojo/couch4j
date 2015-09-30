@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +64,7 @@ public class DesignDocumentOperations {
         return Utils.readInputStream(couchdbConnection, DesignDocument.class);
         
     }
-    
+
     public static <T> List<T> callView(final String designDocumentId, final String viewName, final Class documentClass) {
         return callView(designDocumentId, viewName, documentClass, null);
     }
@@ -86,15 +87,35 @@ public class DesignDocumentOperations {
         
     }
     
+    public static Object getAllDesignDocuments() {
+        
+        final Map<String, String> parameters = new HashMap<>();
+        parameters.put("start_key", "_design/");
+        parameters.put("end_key", "_design0/");
+        final String getAllDesignDocsURL = Utils.createDocumentURL(session) + "/_all_docs" + parametersToQueryString(parameters);
+        System.out.println(getAllDesignDocsURL);
+        
+        final URL couchdbURL = Utils.createURL(getAllDesignDocsURL);
+        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+        
+        Utils.setGETMethod(couchdbConnection);
+        Utils.setAuthenticationHeader(couchdbConnection, session);
+        
+        Utils.readInputStream(couchdbConnection, Object.class);
+        
+        return Utils.readInputStream(couchdbConnection, Object.class);
+        
+    }
+    
     private static String parametersToQueryString(final Map<String, String> parameters) {
 
         if(parameters == null || parameters.isEmpty()) {
             return "";
         } else {
             final StringBuilder builder = new StringBuilder("?");
-            for(String key : parameters.keySet()) {
+            parameters.keySet().stream().forEach((key) -> {
                 builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key))).append("\"&");
-            }
+            });
             return builder.toString().substring(0, (builder.length() - 1));
         }
         

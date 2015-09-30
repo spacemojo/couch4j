@@ -8,7 +8,7 @@ import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
-import com.standardstate.couch4j.options.AllDocumentsOptions;
+import com.standardstate.couch4j.options.QueryParameters;
 import com.standardstate.couch4j.response.AllDocuments;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -41,7 +42,7 @@ public class Utils {
             input = new FileInputStream(file);
             output = new ByteArrayOutputStream();
 
-            int b = 0;
+            int b;
             while ((b = input.read(fileBytes)) != -1) {
                 output.write(fileBytes, 0, b);
             }
@@ -179,8 +180,11 @@ public class Utils {
         couchdbConnection.setRequestProperty(headerName, headerValue);
     }
 
-    public static String toQueryString(final AllDocumentsOptions options) {
-        return "?descending=" + options.isDescending() + "&include_docs=" + options.isIncludeDocs() + (options.getLimit() > 0 ? "&limit=" + options.getLimit() : "");
+    public static String toQueryString(final QueryParameters options) {
+        return "?descending=" + options.isDescending() 
+                + "&include_docs=" + options.isIncludeDocs() 
+                + (options.getLimit() > 0 ? "&limit=" + options.getLimit() : "")
+                ;
     }
 
     public static void writeToConnection(final HttpURLConnection couchdbConnection, final String content) {
@@ -217,13 +221,14 @@ public class Utils {
 
     public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
         try {
+    
             final ObjectMapper mapper = new ObjectMapper();
 
             mapper.registerModule(new JodaModule());
             mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             mapper.setTimeZone(TimeZone.getDefault());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+            
             return (T) mapper.readValue(couchdbConnection.getInputStream(), targetClass);
 
         } catch (IOException e) {
@@ -246,7 +251,7 @@ public class Utils {
         }
     }
 
-    public static AllDocuments initAllDocuments(final Map docs, final AllDocumentsOptions options) {
+    public static AllDocuments initAllDocuments(final Map docs, final QueryParameters options) {
         final AllDocuments allDocuments = new AllDocuments();
         allDocuments.setTotalRows((Integer) docs.get(Constants.TOTAL_ROWS));
         allDocuments.setOffset((Integer) docs.get(Constants.OFFSET));
@@ -254,8 +259,8 @@ public class Utils {
         return allDocuments;
     }
 
-    public static AllDocumentsOptions initAllDocumentsOptions(final int limit, final boolean descending, final boolean includeDocs) {
-        final AllDocumentsOptions options = new AllDocumentsOptions();
+    public static QueryParameters initAllDocumentsOptions(final int limit, final boolean descending, final boolean includeDocs) {
+        final QueryParameters options = new QueryParameters();
         options.setDescending(descending);
         options.setIncludeDocs(includeDocs);
         options.setLimit(limit);

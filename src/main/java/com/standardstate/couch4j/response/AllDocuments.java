@@ -1,21 +1,21 @@
 package com.standardstate.couch4j.response;
 
-import com.standardstate.couch4j.options.AllDocumentsOptions;
+import com.standardstate.couch4j.options.QueryParameters;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllDocuments {
 
-    private AllDocumentsOptions options = null;
+    private QueryParameters options = null;
     private Integer totalRows = 0;
     private Integer offset = 0;
     private final List rows = new ArrayList<>();
 
-    public AllDocumentsOptions getOptions() {
+    public QueryParameters getOptions() {
         return options;
     }
 
-    public void setOptions(final AllDocumentsOptions options) {
+    public void setOptions(final QueryParameters options) {
         this.options = options;
     }
 

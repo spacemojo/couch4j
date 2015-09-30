@@ -30,7 +30,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
     public void constructorTest() {
         assertNotNull("constructorTest()", new DesignDocumentOperations());
     }
-    
+
     @Test
     public void createDesignDocumentTest() {
 
@@ -85,5 +85,5 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
     public void safeEncodeUTF8Test() {
         DesignDocumentOperations.safeEncodeUTF8(TEST_DATABASE_NAME, "UNKNOWN");
     }
-    
+
 }

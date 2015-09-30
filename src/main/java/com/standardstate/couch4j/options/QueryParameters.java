@@ -2,17 +2,19 @@ package com.standardstate.couch4j.options;
 
 import com.standardstate.couch4j.util.Utils;
 
-public class AllDocumentsOptions {
+public class QueryParameters {
 
     private Boolean descending = Boolean.FALSE;
     private Integer limit = 0;
     private Boolean includeDocs = Boolean.FALSE;
+    private String startKey = null;
+    private String endKey = null;
 
     public Boolean isDescending() {
         return descending;
     }
 
-    public void setDescending(Boolean descending) {
+    public void setDescending(final Boolean descending) {
         this.descending = descending;
     }
 
@@ -20,7 +22,7 @@ public class AllDocumentsOptions {
         return limit;
     }
 
-    public void setLimit(Integer limit) {
+    public void setLimit(final Integer limit) {
         this.limit = limit;
     }
 
@@ -28,10 +30,11 @@ public class AllDocumentsOptions {
         return includeDocs;
     }
 
-    public void setIncludeDocs(Boolean includeDocs) {
+    public void setIncludeDocs(final Boolean includeDocs) {
         this.includeDocs = includeDocs;
     }
     
+    @Override
     public String toString() {
         return Utils.objectToJSON(this);
     }
