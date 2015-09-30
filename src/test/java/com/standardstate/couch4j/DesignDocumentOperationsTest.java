@@ -19,6 +19,11 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
     public static void createTestDatabase() {
+        try {
+            DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
+        } catch (Exception e) {
+            System.out.println("Testing " + e.getMessage());
+        }
         final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
         assertEquals("createTestDatabase", true, createResponse.isOk());
     }
