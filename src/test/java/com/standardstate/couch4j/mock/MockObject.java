@@ -44,14 +44,6 @@ public class MockObject extends AbstractCouchDBDocument {
         this.active = active;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 7;

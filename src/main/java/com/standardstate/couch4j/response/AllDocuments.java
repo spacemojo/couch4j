@@ -1,21 +1,31 @@
 package com.standardstate.couch4j.response;
 
-import com.standardstate.couch4j.options.QueryParameters;
+import com.standardstate.couch4j.options.Options;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllDocuments {
 
-    private QueryParameters options = null;
+    private Options options = null;
     private Integer totalRows = 0;
     private Integer offset = 0;
-    private final List rows = new ArrayList<>();
+    private final List<String> rows = new ArrayList<>();
 
-    public QueryParameters getOptions() {
+    public AllDocuments() {
+
+    }
+
+    public AllDocuments(final Integer totalRows, final Integer offset, final Options options) {
+        this.totalRows = totalRows;
+        this.offset = offset;
+        this.options = options;
+    }
+
+    public Options getOptions() {
         return options;
     }
 
-    public void setOptions(final QueryParameters options) {
+    public void setOptions(final Options options) {
         this.options = options;
     }
 
@@ -35,12 +45,12 @@ public class AllDocuments {
         this.offset = offset;
     }
 
-    public void addRow(final Object toAdd) {
+    public void addRow(final String toAdd) {
         rows.add(toAdd);
     }
 
-    public List getRows() {
+    public List<String> getRows() {
         return this.rows;
     }
-    
+
 }

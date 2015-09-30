@@ -2,12 +2,12 @@ package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.design.ValidationDocument;
+import com.standardstate.couch4j.options.Options;
+import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class DesignDocumentOperations {
 
-    private final static String ENCODING = "UTF-8";
     private final static Session session = ConfigurationManager.getSession();
     
     public static OperationResponse createDesignDocument(final DesignDocument document) {
@@ -69,10 +68,10 @@ public class DesignDocumentOperations {
         return callView(designDocumentId, viewName, documentClass, null);
     }
     
-    public static <T> List<T> callView(final String designDocumentId, final String viewName, final Class documentClass, final Map<String, String> parameters) {
+    public static <T> List<T> callView(final String designDocumentId, final String viewName, final Class documentClass, final Options options) {
         
         final List<T> documents = new ArrayList<>();
-        final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName + parametersToQueryString(parameters));
+        final String getDesignURL = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName + Utils.toQueryString(options));
         
         final URL couchdbURL = Utils.createURL(getDesignURL);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -87,47 +86,23 @@ public class DesignDocumentOperations {
         
     }
     
-    public static Object getAllDesignDocuments() {
+    public static List<DesignDocument> getAllDesignDocuments() {
         
-        final Map<String, String> parameters = new HashMap<>();
-        parameters.put("start_key", "_design/");
-        parameters.put("end_key", "_design0/");
-        final String getAllDesignDocsURL = Utils.createDocumentURL(session) + "/_all_docs" + parametersToQueryString(parameters);
-        System.out.println(getAllDesignDocsURL);
+        final Options options = new Options();
+        options.setStartKey("_design/");
+        options.setEndKey("_design0/");
+        options.setIncludeDocs(Boolean.TRUE);
         
-        final URL couchdbURL = Utils.createURL(getAllDesignDocsURL);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+        final AllDocuments allDocuments = DocumentOperations.getAllDocuments(options);
         
-        Utils.setGETMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-        
-        Utils.readInputStream(couchdbConnection, Object.class);
-        
-        return Utils.readInputStream(couchdbConnection, Object.class);
-        
-    }
-    
-    private static String parametersToQueryString(final Map<String, String> parameters) {
+        final List<DesignDocument> designDocuments = new ArrayList<>();
+        for (String row : allDocuments.getRows()) {
+            final DesignDocument designDocument = Utils.readString(row, DesignDocument.class);
+            designDocuments.add(designDocument);
+        }
 
-        if(parameters == null || parameters.isEmpty()) {
-            return "";
-        } else {
-            final StringBuilder builder = new StringBuilder("?");
-            parameters.keySet().stream().forEach((key) -> {
-                builder.append(key).append("=\"").append(safeEncodeUTF8(parameters.get(key))).append("\"&");
-            });
-            return builder.toString().substring(0, (builder.length() - 1));
-        }
+        return designDocuments;
         
     }
-    
-    public static String safeEncodeUTF8(final String toEncode, final String... encoding) {
-        try {
-            return URLEncoder.encode(toEncode, (encoding.length == 1 ? encoding[0] : ENCODING));
-        } catch(UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
     
 }

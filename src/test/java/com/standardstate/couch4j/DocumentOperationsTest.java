@@ -1,9 +1,9 @@
 package com.standardstate.couch4j;
 
 import com.standardstate.couch4j.mock.MockObject;
+import com.standardstate.couch4j.options.Options;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
-import com.standardstate.couch4j.util.Utils;
 import java.io.File;
 import java.io.IOException;
 import org.joda.time.DateTime;
@@ -184,7 +184,9 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         assertEquals("getAllDocuments", new Integer((startsize + 100)), allDocuments.getTotalRows());
         assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
         
-        final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(12);
+        final Options options = new Options();
+        options.setLimit(12);
+        final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(options);
         assertEquals("twelveDocuments", 12, twelveDocuments.getRows().size());
         
     }
