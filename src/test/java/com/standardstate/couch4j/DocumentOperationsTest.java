@@ -17,23 +17,27 @@ import org.junit.Test;
 public class DocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
+    @Ignore
     public static void createTestDatabase() {
         final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
         assertEquals("createTestDatabase", true, createResponse.isOk());
     }
 
     @AfterClass
+    @Ignore
     public static void deleteTestDatabase() {
         final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
         assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
     }
 
     @Test
+    @Ignore
     public void constructorTest() {
         assertNotNull("constructorTest()", new DocumentOperations());
     }
 
     @Test
+    @Ignore
     public void createAndDeleteDocumentWithId() {
 
         final DateTime now = new DateTime();
@@ -57,6 +61,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    @Ignore
     public void createAndDeleteDocument() {
 
         final DateTime now = new DateTime();
@@ -80,6 +85,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test(expected = RuntimeException.class)
+    @Ignore
     public void getNonExistingDocument() {
 
         final MockObject document = DocumentOperations.getDocument("nonexisting", MockObject.class);
@@ -88,6 +94,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test(expected = RuntimeException.class)
+    @Ignore
     public void createDocumentTwice() {
 
         final DateTime now = new DateTime();
@@ -107,6 +114,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    @Ignore
     public void updateDocument() {
 
         final DateTime now = new DateTime();
@@ -131,6 +139,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    @Ignore
     public void attachmentTest() throws IOException {
 
         final DateTime now = new DateTime();
@@ -168,6 +177,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    @Ignore
     public void getAllDocuments() throws IOException {
 
         final int startsize = DocumentOperations.getAllDocuments().getRows().size();
