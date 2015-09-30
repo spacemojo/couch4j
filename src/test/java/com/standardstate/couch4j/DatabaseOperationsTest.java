@@ -5,9 +5,7 @@ import com.standardstate.couch4j.response.OperationResponse;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
-@Ignore
 public class DatabaseOperationsTest extends BaseCouch4JTest {
 
     @Test
