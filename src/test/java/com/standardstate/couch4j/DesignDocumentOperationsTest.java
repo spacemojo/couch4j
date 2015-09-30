@@ -27,7 +27,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
 
 //    @AfterClass
     @Test
-    public static void deleteTestDatabase() {
+    public void deleteTestDatabase() {
         final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
         assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
     }
