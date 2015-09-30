@@ -18,12 +18,12 @@ import org.junit.Ignore;
 
 public class DesignDocumentOperationsTest extends BaseCouch4JTest {
 
-    @BeforeClass
-    @Ignore
-    public static void createTestDatabase() {
-        final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
-        assertEquals("createTestDatabase", true, createResponse.isOk());
-    }
+//    @BeforeClass
+//    @Ignore
+//    public static void createTestDatabase() {
+//        final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
+//        assertEquals("createTestDatabase", true, createResponse.isOk());
+//    }
 
     @AfterClass
     public static void deleteTestDatabase() {
