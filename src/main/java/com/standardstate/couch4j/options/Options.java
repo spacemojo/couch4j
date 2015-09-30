@@ -1,7 +1,5 @@
 package com.standardstate.couch4j.options;
 
-import com.standardstate.couch4j.util.Utils;
-
 public class Options {
 
     private String key = null;
