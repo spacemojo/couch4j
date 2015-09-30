@@ -10,8 +10,10 @@ import org.joda.time.DateTime;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class DocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
@@ -30,7 +32,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
     public void constructorTest() {
         assertNotNull("constructorTest()", new DocumentOperations());
     }
-    
+
     @Test
     public void createAndDeleteDocumentWithId() {
 
@@ -130,46 +132,46 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
 
     @Test
     public void attachmentTest() throws IOException {
-        
+
         final DateTime now = new DateTime();
         final MockObject mock = new MockObject();
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
         mock.setName("This is the name of the mock bean ... ");
-        
+
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
-        
+
         final MockObject fetched = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
-        
+
         final File file = new File("src/test/resources/com/standardstate/couch4j/dog.jpg");
-        
+
         final OperationResponse addResponse = DocumentOperations.addAttachment(fetched, file);
         assertTrue("addResponse", addResponse.isOk());
-        
+
         final MockObject withAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
         assertEquals("fetchedWithAttachments", 1, withAttachments.get_attachments().size());
-    
+
         final Attachment attachment = withAttachments.get_attachments().get("dog.jpg");
         assertEquals("ContentType", "image/jpeg", attachment.getContent_type());
         assertEquals("Length", 128642, attachment.getLength());
         assertEquals("Revpos", 2, attachment.getRevpos());
         assertTrue("Stub", attachment.isStub());
-        
+
         withAttachments.setName("Yet another name ... ");
         DocumentOperations.updateDocument(withAttachments);
-        
+
         final MockObject modifiedWithAttachments = DocumentOperations.getDocument(createResponse.getId(), MockObject.class);
         final OperationResponse deleteResponse = DocumentOperations.deleteAttachment(modifiedWithAttachments, "dog.jpg");
         assertTrue("deleteResponse", deleteResponse.isOk());
-        
+
     }
-    
+
     @Test
     public void getAllDocuments() throws IOException {
 
         final int startsize = DocumentOperations.getAllDocuments().getRows().size();
-        
+
         for (int i = 0; i < 100; i++) {
             final MockObject mock = new MockObject();
             mock.setActive(Boolean.TRUE);
@@ -183,12 +185,12 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         assertEquals("getAllDocuments", (startsize + 100), allDocuments.getRows().size());
         assertEquals("getAllDocuments", new Integer((startsize + 100)), allDocuments.getTotalRows());
         assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
-        
+
         final Options options = new Options();
         options.setLimit(12);
         final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(options);
         assertEquals("twelveDocuments", 12, twelveDocuments.getRows().size());
-        
+
     }
 
 }

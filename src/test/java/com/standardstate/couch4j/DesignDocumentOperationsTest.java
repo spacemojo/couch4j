@@ -14,35 +14,25 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 public class DesignDocumentOperationsTest extends BaseCouch4JTest {
 
     @BeforeClass
+    @Ignore
     public static void createTestDatabase() {
-        try {
-            DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
-        } catch (Exception e) {
-            System.out.println("DesignDocumentOperationsTest 25 " + e.getMessage());
-        }
-        try {
-            final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
-            assertEquals("createTestDatabase", true, createResponse.isOk());
-        } catch (Exception e) {
-            System.out.println("DesignDocumentOperationsTest 31 " + e.getMessage());
-        }
+        final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
+        assertEquals("createTestDatabase", true, createResponse.isOk());
     }
 
     @AfterClass
     public static void deleteTestDatabase() {
-        try {
-            final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
-            assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
-        } catch (Exception e) {
-            System.out.println("DesignDocumentOperationsTest 41 " + e.getMessage());
-        }
+        final OperationResponse deleteResponse = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
+        assertEquals("deleteTestDatabase", true, deleteResponse.isOk());
     }
 
     @Test
+    @Ignore
     public void constructorTest() {
         assertNotNull("constructorTest()", new DesignDocumentOperations());
     }
@@ -61,6 +51,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
     }
 
     @Test
+    @Ignore
     public void createDesignDocumentTest() throws IOException {
 
         final DesignDocument designDocument = new DesignDocument();
@@ -73,7 +64,7 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(designDocument);
 
         createDocuments();
-
+        
         assertTrue("createDesignDocumentTest(isOk)", operationResponse.isOk());
         assertEquals("createDesignDocumentTest(getId)", "_design/users", operationResponse.getId());
 
@@ -88,13 +79,14 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
         options.setKey("Mock document 3");
         final List<MockObject> calledWithParameters = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class, options);
         assertEquals("calledWithParameters", "Mock document 3", calledWithParameters.get(0).getName());
-
+        
         final List<DesignDocument> allDesignDocuments = DesignDocumentOperations.getAllDesignDocuments();
         assertEquals("allDesignDocuments", 2, allDesignDocuments.size());
-
+        
     }
 
     @Test
+    @Ignore
     public void createValidationDocumentTest() {
 
         final ValidationDocument validation = new ValidationDocument();
