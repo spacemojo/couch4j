@@ -180,12 +180,13 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         }
 
         final AllDocuments allDocuments = DocumentOperations.getAllDocuments();
-        assertEquals("getAllDocuments", (startsize + 100), allDocuments.getRows().size());
-        assertEquals("getAllDocuments", new Integer((startsize + 100)), allDocuments.getTotalRows());
-        assertEquals("getAllDocuments", new Integer(0), allDocuments.getOffset());
+        assertEquals("getAllDocuments(no options - row size)", (startsize + 100), allDocuments.getRows().size());
+        assertEquals("getAllDocuments(no options - total row size)", new Integer((startsize + 100)), allDocuments.getTotalRows());
+        assertEquals("getAllDocuments(no options - offset)", new Integer(0), allDocuments.getOffset());
 
         final Options options = new Options();
         options.setLimit(12);
+        options.setDescending(Boolean.TRUE);
         final AllDocuments twelveDocuments = DocumentOperations.getAllDocuments(options);
         assertEquals("twelveDocuments", 12, twelveDocuments.getRows().size());
 

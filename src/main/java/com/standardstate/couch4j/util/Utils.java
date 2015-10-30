@@ -9,12 +9,14 @@ import com.standardstate.couch4j.Constants;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.options.Options;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -258,6 +260,7 @@ public class Utils {
             mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             mapper.setTimeZone(TimeZone.getDefault());
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
             return (T) mapper.readValue(stream, targetClass);
 
         } catch (IOException e) {
@@ -268,11 +271,11 @@ public class Utils {
     public static <T> T readInputStream(final HttpURLConnection couchdbConnection, final Class targetClass) {
         try {
             return readInputStream(couchdbConnection.getInputStream(), targetClass);
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw parseError(couchdbConnection, e);
         }
     }
-    
+
     public static <T> T readString(final String jsonString, final Class targetClass) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -287,7 +290,7 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static void appendMapFunctionToView(final DesignDocument document, final String viewName, final String mapFunction) {
         if (!document.getViews().containsKey(viewName)) {
             document.getViews().put(viewName, new ConstrainedMap());
@@ -322,11 +325,11 @@ public class Utils {
                     + "\"reason\":\"" + error.get("reason") + "\","
                     + "\"method\":\"" + connection.getRequestMethod() + "\"}";
             return new RuntimeException(message, cause);
-            
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
-    
+
 }

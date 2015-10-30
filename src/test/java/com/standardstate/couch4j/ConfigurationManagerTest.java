@@ -32,7 +32,18 @@ public class ConfigurationManagerTest extends BaseCouch4JTest {
         
         final Session session = ConfigurationManager.getSession();
         assertEquals("database name ", "c4jtest", session.getDatabase());
+    
+        final String oldPass = session.getPassword();
+        exceptionCaught = false;
+        session.setPassword("notvalidpassword");
+        try {
+            ConfigurationManager.attemptAuthenticatedCall(session);
+        } catch(Exception e) {
+            exceptionCaught = true;
+        }
+        session.setPassword(oldPass);
+        assertTrue("exception caught ", exceptionCaught);
         
     }
-
+    
 }
