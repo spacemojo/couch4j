@@ -17,9 +17,6 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
     public void listAllDatabases() {
                 
         final List<String> databases = DatabaseOperations.listAllDatabases();
-        for(String database : databases) {
-            System.out.println(database);
-        }
         assertTrue("listAllDatabases", databases.size() > 1);
         
     }
@@ -28,22 +25,20 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
     public void getSystemInformation() {
         
         final Information systemInformation = DatabaseOperations.getSystemInformation();
-        assertNotNull("getDatabaseInformation", systemInformation);
-        System.out.println(systemInformation.toString());
-        System.out.println("Data size : " + systemInformation.getData_size());
+        assertNotNull("getSystemInformation()", systemInformation);
         
     }
     
     @Test
-    public void createDatabase() {
+    public void createAndDeleteDatabase() {
         
         final OperationResponse createDatabase = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
-        assertTrue("createDatabase", createDatabase.isOk());
-        assertTrue("createDatabase", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
+        assertTrue("createDatabase(isOk)", createDatabase.isOk());
+        assertTrue("createDatabase(list all databases)", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
         
         final OperationResponse deleteDatabase = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
-        assertTrue("createDatabase", deleteDatabase.isOk());
-        assertFalse("createDatabase", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
+        assertTrue("createDatabase(delete is ok)", deleteDatabase.isOk());
+        assertFalse("createDatabase(list all databases does not contain)", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
         
     }
     
@@ -51,16 +46,15 @@ public class DatabaseOperationsTest extends BaseCouch4JTest {
     public void getDatabaseInformation() {
         
         final OperationResponse createDatabase = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
-        assertTrue("getDatabaseInformation", createDatabase.isOk());
-        assertTrue("getDatabaseInformation", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
+        assertTrue("getDatabaseInformation(isOk)", createDatabase.isOk());
+        assertTrue("getDatabaseInformation(list all databases)", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
         
         final Information databaseInformation = DatabaseOperations.getDatabaseInformation(TEST_DATABASE_NAME);
-        assertEquals("getDatabaseInformation", TEST_DATABASE_NAME, databaseInformation.getDb_name());
-        System.out.println(databaseInformation.toString());
+        assertEquals("getDatabaseInformation(get information for db name)", TEST_DATABASE_NAME, databaseInformation.getDb_name());
         
         final OperationResponse deleteDatabase = DatabaseOperations.deleteDatabase(TEST_DATABASE_NAME);
-        assertTrue("getDatabaseInformation", deleteDatabase.isOk());
-        assertFalse("getDatabaseInformation", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
+        assertTrue("getDatabaseInformation(delete isOk)", deleteDatabase.isOk());
+        assertFalse("getDatabaseInformation(list all databases does not contain)", DatabaseOperations.listAllDatabases().contains(TEST_DATABASE_NAME));
         
     }
     

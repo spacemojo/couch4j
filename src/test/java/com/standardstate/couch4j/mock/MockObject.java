@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 
 public class MockObject extends AbstractCouchDBDocument {
 
-    private String type = null;
     private String name = null;
     private Integer intValue = 0;
     private DateTime date = null;

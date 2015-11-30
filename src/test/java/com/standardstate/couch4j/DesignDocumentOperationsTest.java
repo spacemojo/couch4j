@@ -16,6 +16,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DesignDocumentOperationsTest extends BaseCouch4JTest {
+    
+    private static final String VIEW_BY_NAME = "byname";
+    private static final String DESIGN_DOCUMENT_ID = "_design/users";
 
     @BeforeClass
     public static void createTestDatabase() {
@@ -51,29 +54,29 @@ public class DesignDocumentOperationsTest extends BaseCouch4JTest {
     public void createDesignDocumentTest() throws IOException {
 
         final DesignDocument designDocument = new DesignDocument();
-        designDocument.set_id("_design/users");
+        designDocument.set_id(DESIGN_DOCUMENT_ID);
 
         Utils.appendMapFunctionToView(designDocument, "all", "function(doc){emit(doc._id, doc);}");
         Utils.appendMapFunctionToView(designDocument, "bydate", "function(doc){emit(doc.date, doc);}");
-        Utils.appendMapFunctionToView(designDocument, "byname", "function(doc){emit(doc.name, doc);}");
+        Utils.appendMapFunctionToView(designDocument, VIEW_BY_NAME, "function(doc){emit(doc.name, doc);}");
 
         final OperationResponse operationResponse = DesignDocumentOperations.createDesignDocument(designDocument);
 
         createDocuments();
         
         assertTrue("createDesignDocumentTest(isOk)", operationResponse.isOk());
-        assertEquals("createDesignDocumentTest(getId)", "_design/users", operationResponse.getId());
+        assertEquals("createDesignDocumentTest(getId)", DESIGN_DOCUMENT_ID, operationResponse.getId());
 
         final DesignDocument createdDesignDocument = DesignDocumentOperations.getDesignDocument("users");
-        assertEquals("createDesignDocumentTest(getId from fetched)", "_design/users", createdDesignDocument.get_id());
+        assertEquals("createDesignDocumentTest(getId from fetched)", DESIGN_DOCUMENT_ID, createdDesignDocument.get_id());
 
         // call a view ...
-        final List<MockObject> mockObjects = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class);
-        System.out.println("MockObjects : " + mockObjects.size());
+        final List<MockObject> mockObjects = DesignDocumentOperations.callView(DESIGN_DOCUMENT_ID, VIEW_BY_NAME, MockObject.class);
+        assertNotNull("MockObjects", mockObjects);
 
         final Options options = new Options();
         options.setKey("Mock document 3");
-        final List<MockObject> calledWithParameters = DesignDocumentOperations.callView("_design/users", "byname", MockObject.class, options);
+        final List<MockObject> calledWithParameters = DesignDocumentOperations.callView(DESIGN_DOCUMENT_ID, VIEW_BY_NAME, MockObject.class, options);
         assertEquals("calledWithParameters", "Mock document 3", calledWithParameters.get(0).getName());
         
         final List<DesignDocument> allDesignDocuments = DesignDocumentOperations.getAllDesignDocuments();

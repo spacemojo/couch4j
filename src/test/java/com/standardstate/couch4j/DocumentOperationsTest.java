@@ -14,6 +14,8 @@ import org.junit.Test;
 
 public class DocumentOperationsTest extends BaseCouch4JTest {
 
+    private static final String MOCK_BEAN_NAME = "This is the name of the mock bean ... ";
+    
     @BeforeClass
     public static void createTestDatabase() {
         final OperationResponse createResponse = DatabaseOperations.createDatabase(TEST_DATABASE_NAME);
@@ -39,7 +41,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
-        mock.setName("This is the name of the mock bean ... ");
+        mock.setName(MOCK_BEAN_NAME);
         mock.set_id("1029384756");
 
         final OperationResponse create = DocumentOperations.createDocumentWithId(mock, mock.get_id());
@@ -62,7 +64,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
-        mock.setName("This is the name of the mock bean ... ");
+        mock.setName(MOCK_BEAN_NAME);
 
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         assertEquals("createAndDeleteDocument", true, createResponse.isOk());
@@ -93,7 +95,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
-        mock.setName("This is the name of the mock bean ... ");
+        mock.setName(MOCK_BEAN_NAME);
 
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         mock.set_id(createResponse.getId());
@@ -112,7 +114,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
-        mock.setName("This is the name of the mock bean ... ");
+        mock.setName(MOCK_BEAN_NAME);
 
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
         mock.set_id(createResponse.getId());
@@ -136,7 +138,7 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
         mock.setActive(Boolean.TRUE);
         mock.setDate(now);
         mock.setIntValue(12);
-        mock.setName("This is the name of the mock bean ... ");
+        mock.setName(MOCK_BEAN_NAME);
 
         final OperationResponse createResponse = DocumentOperations.createDocument(mock);
 
@@ -175,13 +177,13 @@ public class DocumentOperationsTest extends BaseCouch4JTest {
             mock.setActive(Boolean.TRUE);
             mock.setDate(new DateTime());
             mock.setIntValue(i);
-            mock.setName("This is the name of the mock bean ... " + i);
+            mock.setName(MOCK_BEAN_NAME + i);
             DocumentOperations.createDocument(mock);
         }
 
         final AllDocuments allDocuments = DocumentOperations.getAllDocuments();
-        assertEquals("getAllDocuments(no options - row size)", (startsize + 100), allDocuments.getRows().size());
-        assertEquals("getAllDocuments(no options - total row size)", new Integer((startsize + 100)), allDocuments.getTotalRows());
+        assertEquals("getAllDocuments(no options - row size)", startsize + 100, allDocuments.getRows().size());
+        assertEquals("getAllDocuments(no options - total row size)", new Integer(startsize + 100), allDocuments.getTotalRows());
         assertEquals("getAllDocuments(no options - offset)", new Integer(0), allDocuments.getOffset());
 
         final Options options = new Options();
