@@ -1,5 +1,6 @@
 package com.standardstate.couch4j.util;
 
+import com.standardstate.couch4j.Couch4JException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class ConstrainedMap extends HashMap<String, String> {
         if("map".equals(key) || "reduce".equals(key)) {
             return super.put(key, value);
         } else {
-            throw new RuntimeException("Key \"" + key + "\" is not accepted, only \"map\" and \"reduce\" are acceptable values.");
+            throw new Couch4JException("Key \"" + key + "\" is not accepted, only \"map\" and \"reduce\" are acceptable values.");
         }
     }    
 

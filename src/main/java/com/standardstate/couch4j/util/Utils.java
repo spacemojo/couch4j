@@ -6,17 +6,16 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.Constants;
+import com.standardstate.couch4j.Couch4JException;
 import com.standardstate.couch4j.Session;
 import com.standardstate.couch4j.design.DesignDocument;
 import com.standardstate.couch4j.options.Options;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +33,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Utils {
 
-    private final static String ENCODING = "UTF-8";
+    private static final String ENCODING = "UTF-8";
 
     public static byte[] parseFile(final File file) {
 
@@ -55,7 +54,7 @@ public class Utils {
             return output.toByteArray();
 
         } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+            throw new Couch4JException(ioe);
         } finally {
             safeClose(input);
             safeClose(output);
@@ -84,20 +83,17 @@ public class Utils {
 
     public static String objectToJSONWithoutRev(final DesignDocument document) {
         document.set_rev(null);
-        final String json = Utils.objectToJSON(document);
-        return json;
+        return Utils.objectToJSON(document);
     }
 
     public static String objectToJSONWithoutRev(final AbstractCouchDBDocument document) {
         document.set_rev(null);
-        final String json = Utils.objectToJSON(document);
-        return json;
+        return Utils.objectToJSON(document);
     }
 
     public static String objectToJSONWithoutId(final AbstractCouchDBDocument document) {
         document.set_id(null);
-        final String json = Utils.objectToJSON(document);
-        return json;
+        return Utils.objectToJSON(document);
     }
 
     public static String objectToJSON(final Object object) {
@@ -112,7 +108,7 @@ public class Utils {
         try {
             mapper.writeValue(writer, object);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new Couch4JException(e);
         }
         return writer.toString();
     }
@@ -133,7 +129,7 @@ public class Utils {
         try {
             return new URL(url);
         } catch (MalformedURLException mue) {
-            throw new RuntimeException(mue);
+            throw new Couch4JException(mue);
         }
     }
 
@@ -141,7 +137,7 @@ public class Utils {
         try {
             couchdbConnection.setRequestMethod(method);
         } catch (ProtocolException pe) {
-            throw new RuntimeException(pe);
+            throw new Couch4JException(pe);
         }
     }
 
@@ -207,15 +203,15 @@ public class Utils {
                 }
             }
         }
-        return builder.toString().substring(0, (builder.length() - 1));
+        return builder.toString().substring(0, builder.length() - 1);
 
     }
 
-    private static String safeEncodeUTF8(final String toEncode, final String... encoding) {
+    public static String safeEncodeUTF8(final String toEncode, final String... encoding) {
         try {
-            return URLEncoder.encode(toEncode, (encoding.length == 1 ? encoding[0] : ENCODING));
+            return URLEncoder.encode(toEncode, encoding.length == 1 ? encoding[0] : ENCODING);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new Couch4JException(e);
         }
     }
 
@@ -227,7 +223,7 @@ public class Utils {
             dataOutputStream.flush();
             dataOutputStream.close();
         } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+            throw new Couch4JException(ioe);
         }
     }
 
@@ -239,7 +235,7 @@ public class Utils {
             dataOutputStream.flush();
             dataOutputStream.close();
         } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+            throw new Couch4JException(ioe);
         }
     }
 
@@ -247,7 +243,7 @@ public class Utils {
         try {
             return (HttpURLConnection) couchdbURL.openConnection();
         } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+            throw new Couch4JException(ioe);
         }
     }
 
@@ -264,7 +260,7 @@ public class Utils {
             return (T) mapper.readValue(stream, targetClass);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new Couch4JException(e);
         }
     }
 
@@ -287,7 +283,7 @@ public class Utils {
 
             return (T) mapper.readValue(jsonString, targetClass);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new Couch4JException(e);
         }
     }
 
@@ -327,7 +323,7 @@ public class Utils {
             return new RuntimeException(message, cause);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new Couch4JException(e);
         }
 
     }

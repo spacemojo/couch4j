@@ -13,7 +13,7 @@ public class Information {
     private Boolean compact_running = false;
     private Integer data_size = 0;
     private Integer disk_size = 0;
-    private Long instance_start_time = 0l;
+    private Long instance_start_time = 0L;
     private Integer disk_format_version = 0;
     private String couchdb = null;
     private String version = null;
