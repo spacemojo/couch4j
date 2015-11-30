@@ -9,13 +9,12 @@ import com.standardstate.couch4j.util.Utils;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DesignDocumentOperations {
 
-    private final static Session session = ConfigurationManager.getSession();
+    private static final Session session = ConfigurationManager.getSession();
     
     public static OperationResponse createDesignDocument(final DesignDocument document) {
         

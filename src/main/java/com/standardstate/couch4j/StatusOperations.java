@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class StatusOperations {
 
-    private final static Session session = ConfigurationManager.getSession();
+    private static final Session session = ConfigurationManager.getSession();
     
     public static Welcome getWelcome() {
         

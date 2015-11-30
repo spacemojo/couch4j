@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DatabaseOperations {
     
-    private final static Session session = ConfigurationManager.getSession();
+    private static final Session session = ConfigurationManager.getSession();
     
     public static List<String> listAllDatabases() {
         
@@ -43,14 +43,22 @@ public class DatabaseOperations {
         return createOrDeleteDatabase(name, Constants.DELETE);        
     }
     
-    private static OperationResponse createOrDeleteDatabase(final String name, final String method) {
+    public static OperationResponse createDatabase(final String name, final Session session) {    
+        return createOrDeleteDatabase(name, Constants.PUT, session);        
+    }
+    
+    public static OperationResponse deleteDatabase(final String name, final Session session) {    
+        return createOrDeleteDatabase(name, Constants.DELETE, session);        
+    }
+    
+    private static OperationResponse createOrDeleteDatabase(final String name, final String method, final Session... optionalSession) {
         
-        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + name);
+        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(optionalSession.length == 1 ? optionalSession[0] : session) + name);
             
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
         
         setAppropriateRequestMethod(couchdbConnection, method);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
+        Utils.setAuthenticationHeader(couchdbConnection, optionalSession.length == 1 ? optionalSession[0] : session);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
         

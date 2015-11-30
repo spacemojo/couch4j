@@ -15,7 +15,8 @@ import java.util.Map;
 
 public class DocumentOperations {
 
-    private final static Session session = ConfigurationManager.getSession();
+    private static final Session session = ConfigurationManager.getSession();
+    private static final String REVISION_PARAMETER = "?rev=";
 
     public static OperationResponse createDocumentWithId(final AbstractCouchDBDocument toCreate, final String id) {
 
@@ -43,7 +44,6 @@ public class DocumentOperations {
         Utils.setAuthenticationHeader(couchdbConnection, session);
 
         final String json = Utils.objectToJSONWithoutId(toCreate);
-        System.out.println("DocumentOperations.createDocument(\"" + json + "\");");
         Utils.writeToConnection(couchdbConnection, json);
 
         return Utils.readInputStream(couchdbConnection, OperationResponse.class);
@@ -89,7 +89,7 @@ public class DocumentOperations {
 
     public static OperationResponse addAttachment(final AbstractCouchDBDocument document, final File file) throws IOException {
 
-        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + "?rev=" + document.get_rev();
+        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + REVISION_PARAMETER + document.get_rev();
         final URL couchdbURL = Utils.createURL(url);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
@@ -104,7 +104,7 @@ public class DocumentOperations {
 
     public static OperationResponse deleteAttachment(final AbstractCouchDBDocument document, final String name) {
         
-        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + "?rev=" + document.get_rev();
+        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + REVISION_PARAMETER + document.get_rev();
         
         final URL couchdbURL = Utils.createURL(url);
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
@@ -138,7 +138,7 @@ public class DocumentOperations {
 
     public static OperationResponse deleteDocument(final AbstractCouchDBDocument document) {
 
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + document.get_id() + "?rev=" + document.get_rev());
+        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + document.get_id() + REVISION_PARAMETER + document.get_rev());
         final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
 
         Utils.setDELETEMethod(couchdbConnection);
