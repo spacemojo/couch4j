@@ -1,63 +1,42 @@
 package com.standardstate.couch4j.design;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.util.ConstrainedMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DesignDocument {
+public class DesignDocument extends AbstractCouchDBDocument {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String _id = null;
-    
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String _rev = null;
-    
-    private String language = "javascript";
-    
-    private Map<String, ConstrainedMap> views = new HashMap<>();
-    
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String validate_doc_update = null;
-    
-    public String get_id() {
-        return _id;
-    }
+  private String language = "javascript";
 
-    public void set_id(final String _id) {
-        this._id = _id;
-    }
+  private Map<String, ConstrainedMap> views = new HashMap<>();
 
-    public String get_rev() {
-        return _rev;
-    }
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String validate_doc_update = null;
 
-    public void set_rev(final String _rev) {
-        this._rev = _rev;
-    }
+  public String getLanguage() {
+    return language;
+  }
 
-    public String getLanguage() {
-        return language;
-    }
+  public void setLanguage(final String language) {
+    this.language = language;
+  }
 
-    public void setLanguage(final String language) {
-        this.language = language;
-    }
+  public Map<String, ConstrainedMap> getViews() {
+    return views;
+  }
 
-    public Map<String, ConstrainedMap> getViews() {
-        return views;
-    }
+  public void setViews(final Map<String, ConstrainedMap> views) {
+    this.views = views;
+  }
 
-    public void setViews(final Map<String, ConstrainedMap> views) {
-        this.views = views;
-    }
+  public String getValidate_doc_update() {
+    return validate_doc_update;
+  }
 
-    public String getValidate_doc_update() {
-        return validate_doc_update;
-    }
+  public void setValidate_doc_update(final String validate_doc_update) {
+    this.validate_doc_update = validate_doc_update;
+  }
 
-    public void setValidate_doc_update(final String validate_doc_update) {
-        this.validate_doc_update = validate_doc_update;
-    }
-    
 }

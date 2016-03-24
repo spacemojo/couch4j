@@ -3,38 +3,32 @@ package com.standardstate.couch4j;
 import com.standardstate.couch4j.response.UUIDS;
 import com.standardstate.couch4j.response.Welcome;
 import com.standardstate.couch4j.util.Utils;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class StatusOperations {
 
-    private static final Session session = ConfigurationManager.getSession();
-    
-    public static Welcome getWelcome() {
-        
-        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session));
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-        
-        Utils.setGETMethod(couchdbConnection);
-        
-        return Utils.readInputStream(couchdbConnection, Welcome.class);
-        
-    }
-    
-    public static UUIDS getUUIDS(int count) {
-        
-        final URL couchdbURL = Utils.createURL(Utils.createDatabaseURL(session) + Constants.UUIDS + "?count=" + count);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-        
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-        Utils.setGETMethod(couchdbConnection);
-        
-        return Utils.readInputStream(couchdbConnection, UUIDS.class);
-        
-    }
+  private Session session;
 
-    public static String getUUID() {
-        return getUUIDS(1).getUuids()[0];
-    }
-    
+  public StatusOperations() {
+    // default constructor
+  }
+
+  public StatusOperations(final Session session) {
+    this.session = session;
+  }
+
+  public Welcome getWelcome() {
+    return Utils.get(Utils.createDatabaseURL(session), Welcome.class);
+  }
+
+  public UUIDS getUUIDS(int count) {
+
+    final String url = Utils.createDatabaseURL(session) + Constants.UUIDS + "?count=" + count;
+    return Utils.get(url, UUIDS.class, session.getUsername(), session.getPassword());
+
+  }
+
+  public String getUUID() {
+    return getUUIDS(1).getUuids()[0];
+  }
+
 }

@@ -5,147 +5,95 @@ import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
 import com.standardstate.couch4j.util.Utils;
 import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DocumentOperations {
 
-    private static final Session session = ConfigurationManager.getSession();
-    private static final String REVISION_PARAMETER = "?rev=";
+  private Session session = null;
+  private static final String REVISION_PARAMETER = "?rev=";
 
-    public static OperationResponse createDocumentWithId(final AbstractCouchDBDocument toCreate, final String id) {
+  public DocumentOperations(final Session session) {
+    this.session = session;
+  }
 
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+  public Session getSession() {
+    return session;
+  }
 
-        Utils.setPUTMethod(couchdbConnection);
-        Utils.setJSONContentHeader(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
+  public void setSession(final Session session) {
+    this.session = session;
+  }
 
-        final String json = Utils.objectToJSONWithoutRev(toCreate);
-        Utils.writeToConnection(couchdbConnection, json);
+  public OperationResponse createDocumentWithId(final AbstractCouchDBDocument toCreate, final String id) {
 
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
+    final String url = Utils.createDocumentURL(session) + "/" + id;
+    return Utils.put(url, OperationResponse.class, toCreate, session.getUsername(), session.getPassword());
 
+  }
+
+  public OperationResponse createDocument(final AbstractCouchDBDocument toCreate) {
+
+    final String url = Utils.createDocumentURL(session);
+    return Utils.post(url, OperationResponse.class, toCreate, session.getUsername(), session.getPassword());
+
+  }
+
+  public AllDocuments getAllDocuments() {
+    return getAllDocuments(null);
+  }
+
+  public AllDocuments getAllDocuments(final Options options) {
+
+    final String url = Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS;
+    final Map docs = (Map) Utils.get(url, options, Object.class, session.getUsername(), session.getPassword());
+
+    final AllDocuments allDocuments = new AllDocuments((Integer) docs.get(Constants.TOTAL_ROWS), (Integer) docs.get(Constants.OFFSET), options);
+
+    for (Object row : (List) docs.get(Constants.ROWS)) {
+      final LinkedHashMap documentMap = (LinkedHashMap) ((LinkedHashMap) row).get(Constants.DOC);
+      final String jsonString = Utils.objectToJSON(documentMap);
+      allDocuments.addRow(jsonString);
     }
 
-    public static OperationResponse createDocument(final AbstractCouchDBDocument toCreate) {
+    return allDocuments;
 
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session));
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+  }
 
-        Utils.setPOSTMethod(couchdbConnection);
-        Utils.setJSONContentHeader(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
+  public <T extends AbstractCouchDBDocument> T getDocument(final String id, final Class documentClass) {
 
-        final String json = Utils.objectToJSONWithoutId(toCreate);
-        Utils.writeToConnection(couchdbConnection, json);
+    final String url = Utils.createDocumentURL(session) + "/" + id;
+    return (T) Utils.get(url, documentClass, session.getUsername(), session.getPassword());
 
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
+  }
 
-    }
+  public OperationResponse addAttachment(final AbstractCouchDBDocument document, final File file) {
 
-    public static AllDocuments getAllDocuments() {
-        return getAllDocuments(null);
-    }
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + REVISION_PARAMETER + document.get_rev();
+    return Utils.put(url, OperationResponse.class, file, session.getUsername(), session.getPassword());
 
-    public static AllDocuments getAllDocuments(final Options options) {
+  }
 
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + Constants.ALL_DOCUMENTS + Utils.toQueryString(options));
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+  public OperationResponse deleteAttachment(final AbstractCouchDBDocument document, final String name) {
 
-        Utils.setGETMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + REVISION_PARAMETER + document.get_rev();
+    return Utils.delete(url, OperationResponse.class, session.getUsername(), session.getPassword());
 
-        final Map docs = (Map) Utils.readInputStream(couchdbConnection, Object.class);
-        final AllDocuments allDocuments = new AllDocuments((Integer) docs.get(Constants.TOTAL_ROWS), (Integer) docs.get(Constants.OFFSET), options);
+  }
 
-        for (Object row : (List) docs.get(Constants.ROWS)) {
-            final LinkedHashMap documentMap = (LinkedHashMap) ((LinkedHashMap) row).get(Constants.DOC);
-            final String jsonString = Utils.objectToJSON(documentMap);
-            allDocuments.addRow(jsonString);
-        }
+  public OperationResponse updateDocument(final AbstractCouchDBDocument document) {
 
-        return allDocuments;
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id();
+    return Utils.put(url, OperationResponse.class, document, session.getUsername(), session.getPassword());
 
-    }
-    
-    public static <T extends AbstractCouchDBDocument> T getDocument(final String id, final Class documentClass) {
+  }
 
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + id);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
+  public OperationResponse deleteDocument(final AbstractCouchDBDocument document) {
 
-        Utils.setGETMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + REVISION_PARAMETER + document.get_rev();
+    return Utils.delete(url, OperationResponse.class, session.getUsername(), session.getPassword());
 
-        return (T) Utils.readInputStream(couchdbConnection, documentClass);
-
-    }
-
-    public static OperationResponse addAttachment(final AbstractCouchDBDocument document, final File file) throws IOException {
-
-        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + REVISION_PARAMETER + document.get_rev();
-        final URL couchdbURL = Utils.createURL(url);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-
-        Utils.setPUTMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-        Utils.setContentTypeHeader(couchdbConnection, Files.probeContentType(file.toPath()));
-        Utils.writeToConnection(couchdbConnection, Utils.parseFile(file));
-
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
-        
-    }
-
-    public static OperationResponse deleteAttachment(final AbstractCouchDBDocument document, final String name) {
-        
-        final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + REVISION_PARAMETER + document.get_rev();
-        
-        final URL couchdbURL = Utils.createURL(url);
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-
-        Utils.setDELETEMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
-        
-    }
-    
-    public static OperationResponse updateDocument(final AbstractCouchDBDocument document) {
-
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + document.get_id());
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-
-        Utils.setPUTMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-        Utils.setJSONContentHeader(couchdbConnection);
-
-        final String id = document.get_id();
-        document.set_id(null);
-        final String json = Utils.objectToJSON(document);
-        document.set_id(id);
-        
-        Utils.writeToConnection(couchdbConnection, json);
-
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
-
-    }
-
-    public static OperationResponse deleteDocument(final AbstractCouchDBDocument document) {
-
-        final URL couchdbURL = Utils.createURL(Utils.createDocumentURL(session) + "/" + document.get_id() + REVISION_PARAMETER + document.get_rev());
-        final HttpURLConnection couchdbConnection = Utils.openURLConnection(couchdbURL);
-
-        Utils.setDELETEMethod(couchdbConnection);
-        Utils.setAuthenticationHeader(couchdbConnection, session);
-
-        return Utils.readInputStream(couchdbConnection, OperationResponse.class);
-
-    }
+  }
 
 }
