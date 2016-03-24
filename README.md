@@ -6,7 +6,6 @@ Couch4j is a Java library that integrates with [Apache CouchDB](http://couchdb.a
 Contents : 
 
 + Getting started
-+ The Session object
 + Database Operations
 + Document Operations
 + Design Document Operations
@@ -42,5 +41,7 @@ final Welcome welcome = statusOperations.getWelcome();
 You're now ready to move on to more complex and useful features.
 
 #### DatabaseOperations
+
+DatabaseOperaions get initialized the same way StatusOperations do. You can do basic database specific operations, like create a database, list the databases, etc.. 
 
 
