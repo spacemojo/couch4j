@@ -5,6 +5,7 @@ import com.standardstate.couch4j.design.ValidationDocument;
 import com.standardstate.couch4j.options.Options;
 import com.standardstate.couch4j.response.AllDocuments;
 import com.standardstate.couch4j.response.OperationResponse;
+import com.standardstate.couch4j.util.HTTP;
 import com.standardstate.couch4j.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class DesignDocumentOperations {
 
     final String url = Utils.createDesignDocumentURL(session, document.get_id());
     document.setType(null); // type is not required for a design document
-    return Utils.put(url, OperationResponse.class, document, session.getUsername(), session.getPassword());
+    return HTTP.put(url, OperationResponse.class, document, session.getUsername(), session.getPassword());
 
   }
   
@@ -42,14 +43,14 @@ public class DesignDocumentOperations {
 
     final String url = Utils.createDesignDocumentURL(session, document.get_id());
     document.setType(null);
-    return Utils.put(url, OperationResponse.class, document, session.getUsername(), session.getPassword());
+    return HTTP.put(url, OperationResponse.class, document, session.getUsername(), session.getPassword());
 
   }
   
   public DesignDocument getDesignDocument(final String documentName) {
 
     final String url = Utils.createDesignDocumentURL(session, "_design/" + documentName);
-    return Utils.get(url, DesignDocument.class, session.getUsername(), session.getPassword());
+    return HTTP.get(url, DesignDocument.class, session.getUsername(), session.getPassword());
     
   }
   
@@ -62,7 +63,7 @@ public class DesignDocumentOperations {
     final List<T> documents = new ArrayList<>();
     final String url = Utils.createDesignDocumentURL(session, designDocumentId + "/_view/" + viewName);
 
-    final Map docs = (Map) Utils.get(url, options, Object.class, session.getUsername(), session.getPassword());
+    final Map docs = (Map) HTTP.get(url, options, Object.class, session.getUsername(), session.getPassword());
     Utils.parseGenericValues(docs, documents, documentClass);
 
     return documents;
