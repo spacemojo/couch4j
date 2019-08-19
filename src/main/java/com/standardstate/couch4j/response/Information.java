@@ -8,8 +8,8 @@ public class Information {
   private String db_name = null;
   private Integer doc_count = 0;
   private Integer doc_del_count = 0;
-  private Integer update_seq = 0;
-  private Integer purge_seq = 0;
+  private String update_seq = null;
+  private String purge_seq = null;
   private Boolean compact_running = false;
   private Integer data_size = 0;
   private Integer disk_size = 0;
@@ -50,19 +50,19 @@ public class Information {
     this.doc_del_count = doc_del_count;
   }
 
-  public Integer getUpdate_seq() {
+  public String getUpdate_seq() {
     return update_seq;
   }
 
-  public void setUpdate_seq(final Integer update_seq) {
+  public void setUpdate_seq(final String update_seq) {
     this.update_seq = update_seq;
   }
 
-  public Integer getPurge_seq() {
+  public String getPurge_seq() {
     return purge_seq;
   }
 
-  public void setPurge_seq(final Integer purge_seq) {
+  public void setPurge_seq(final String purge_seq) {
     this.purge_seq = purge_seq;
   }
 

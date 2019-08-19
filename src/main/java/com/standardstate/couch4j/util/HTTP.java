@@ -3,9 +3,6 @@ package com.standardstate.couch4j.util;
 import com.standardstate.couch4j.AbstractCouchDBDocument;
 import com.standardstate.couch4j.Couch4JException;
 import com.standardstate.couch4j.options.Options;
-import static com.standardstate.couch4j.util.Utils.buildURI;
-import static com.standardstate.couch4j.util.Utils.objectToJSON;
-import static com.standardstate.couch4j.util.Utils.readInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -25,15 +22,9 @@ import org.apache.http.impl.client.HttpClients;
 
 public class HTTP {
 
-    private static CloseableHttpClient CLIENT = HttpClients.createDefault();
-    
-    public static void setHttpClient(final CloseableHttpClient client) {
-        CLIENT = client;
-    }
-    
     public static <T> T get(final String url, final Options options, final Class targetClass, final String... credentials) {
 
-        final HttpGet get = (options != null) ? new HttpGet(buildURI(url, options)) : new HttpGet(url);
+        final HttpGet get = (options != null) ? new HttpGet(Utils.buildURI(url, options)) : new HttpGet(url);
         return executeHttpRequest(targetClass, get, null, null, credentials);
 
     }
@@ -107,7 +98,7 @@ public class HTTP {
 
     private static void setEntity(final HttpPut put, final AbstractCouchDBDocument requestBody) {
         try {
-            put.setEntity(new StringEntity(objectToJSON(requestBody)));
+            put.setEntity(new StringEntity(Utils.objectToJSON(requestBody)));
         } catch (UnsupportedEncodingException e) {
             throw new Couch4JException(e);
         }
@@ -115,7 +106,7 @@ public class HTTP {
 
     private static void setEntity(final HttpPost post, final AbstractCouchDBDocument requestBody) {
         try {
-            post.setEntity(new StringEntity(objectToJSON(requestBody)));
+            post.setEntity(new StringEntity(Utils.objectToJSON(requestBody)));
         } catch (UnsupportedEncodingException e) {
             throw new Couch4JException(e);
         }
@@ -124,19 +115,17 @@ public class HTTP {
     private static <T> T execute(final HttpRequestBase request, final Class targetClass) {
         
         CloseableHttpResponse response = null;
-        
-        // Here we see if we init an http client or take the one already in 
-        // the class. This is an attempt for better unit testing.
-        if(CLIENT == null) {
-            CLIENT = HttpClients.createDefault();
-        }
+        final CloseableHttpClient client = HttpClients.createDefault();
         
         try {
-            response = CLIENT.execute(request);
+            
+            response = client.execute(request);
             if (response.getStatusLine().getStatusCode() == 404) {
                 throw new Couch4JException("Object not found");
             }
-            return readInputStream(response.getEntity().getContent(), targetClass);
+        
+            return Utils.readInputStream(response.getEntity().getContent(), targetClass);
+        
         } catch (IOException e) {
             throw new Couch4JException(e);
         } finally {

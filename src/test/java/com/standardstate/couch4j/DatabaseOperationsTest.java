@@ -2,52 +2,65 @@ package com.standardstate.couch4j;
 
 import static com.standardstate.couch4j.BaseTest.TEST_DATABASE_NAME;
 import com.standardstate.couch4j.response.Information;
-import java.util.ArrayList;
+import com.standardstate.couch4j.response.OperationResponse;
 import java.util.List;
+import org.junit.After;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
 import static org.junit.Assert.*;
 
 public class DatabaseOperationsTest {
 
+    @Before
+    public void beforeTest() {
+        BaseTest.beforeTest();
+    }
+    
+    @After
+    public void afterTest() {
+        
+        final DatabaseOperations ops = new DatabaseOperations(BaseTest.newTestSession());
+        final OperationResponse response = ops.deleteDatabase(TEST_DATABASE_NAME);
+        assertTrue("DatabaseOperationsTest.afterTest", response.isOk());
+        
+    }
+    
     @Test
     public void constructorTest() {
 
-        final DatabaseOperations operations = new DatabaseOperations();
-        assertNotNull("constructorTest()", operations);
+        final DatabaseOperations ops = new DatabaseOperations();
+        assertNotNull("constructorTest()", ops);
 
-        operations.setSession(new Session());
-        operations.getSession().setDatabase(TEST_DATABASE_NAME);
-        assertEquals("constructorTest", TEST_DATABASE_NAME, operations.getSession().getDatabase());
+        ops.setSession(BaseTest.newTestSession());
+        assertEquals("constructorTest", TEST_DATABASE_NAME, ops.getSession().getDatabase());
 
     }
-
+    
     @Test
-    public void listAllDatabases() {
-    
-        final ArrayList<String> expectedDatabases = new ArrayList<>();
-        expectedDatabases.add("unittests-01");
-        expectedDatabases.add("unittests-02");
+    public void listAllDatabasesTest() {
         
-        final DatabaseOperations dbOps = mock(DatabaseOperations.class);
-        when(dbOps.listAllDatabases()).thenReturn(expectedDatabases);
+        final DatabaseOperations ops = new DatabaseOperations(BaseTest.newTestSession());
+        final List<String> names = ops.listAllDatabases();
+        assertEquals("listAllDatabasesTest", 1, names.size());
+        assertEquals("listAllDatabasesTest", BaseTest.TEST_DATABASE_NAME, names.get(0));
         
-        final List<String> databases = dbOps.listAllDatabases();
-        assertTrue("listAllDatabases", databases.size() > 1);
-    
     }
-
+    
     @Test
-    public void getSystemInformation() {
-
-        final Information info = new Information();
-        info.setDb_name(TEST_DATABASE_NAME);
+    public void getDatabaseInformationTest() {
         
-        final DatabaseOperations dbOps = mock(DatabaseOperations.class);
-        when(dbOps.getSystemInformation()).thenReturn(info);
+        final DatabaseOperations ops = new DatabaseOperations(BaseTest.newTestSession());
+        final Information info = ops.getDatabaseInformation(TEST_DATABASE_NAME);
+        assertEquals("getDatabaseInformationTest", BaseTest.TEST_DATABASE_NAME, info.getDb_name());
         
-        final Information systemInformation = dbOps.getSystemInformation();
-        assertEquals("getSystemInformation", TEST_DATABASE_NAME, systemInformation.getDb_name());
+    }
+    
+    @Test
+    public void getSystemInformationTest() {
+        
+        final DatabaseOperations ops = new DatabaseOperations(BaseTest.newTestSession());
+        final Information info = ops.getSystemInformation();
+        assertEquals("getSystemInformationTest", "Welcome", info.getCouchdb());
         
     }
 
