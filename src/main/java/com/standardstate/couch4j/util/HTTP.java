@@ -120,10 +120,6 @@ public class HTTP {
         try {
             
             response = client.execute(request);
-            if (response.getStatusLine().getStatusCode() == 404) {
-                throw new Couch4JException("Object not found");
-            }
-        
             return Utils.readInputStream(response.getEntity().getContent(), targetClass);
         
         } catch (IOException e) {

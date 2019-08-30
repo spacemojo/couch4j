@@ -13,6 +13,7 @@ public class Constants {
   public static final String DOC = "doc";
   public static final String VALUE = "value";
 
+  public static final String REVISION_PARAMETER = "?rev=";
   public static final String REVISION_FIELD = "_rev";
   public static final String ID_FIELD = "_id";
   public static final String ATTACHMENTS_FIELD = "_attachments";

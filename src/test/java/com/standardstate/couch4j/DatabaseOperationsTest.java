@@ -18,11 +18,7 @@ public class DatabaseOperationsTest {
     
     @After
     public void afterTest() {
-        
-        final DatabaseOperations ops = new DatabaseOperations(BaseTest.newTestSession());
-        final OperationResponse response = ops.deleteDatabase(TEST_DATABASE_NAME);
-        assertTrue("DatabaseOperationsTest.afterTest", response.isOk());
-        
+        BaseTest.afterTest();
     }
     
     @Test

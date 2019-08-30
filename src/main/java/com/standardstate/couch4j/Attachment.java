@@ -7,7 +7,7 @@ public final class Attachment {
   private String digest = null;
   private int length = 0;
   private boolean stub = true;
-
+  
   public String getContent_type() {
     return content_type;
   }

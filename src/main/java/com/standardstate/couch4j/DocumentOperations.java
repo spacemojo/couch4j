@@ -13,7 +13,6 @@ import java.util.Map;
 public class DocumentOperations {
 
   private Session session = null;
-  private static final String REVISION_PARAMETER = "?rev=";
 
   public DocumentOperations(final Session session) {
     this.session = session;
@@ -71,14 +70,14 @@ public class DocumentOperations {
 
   public OperationResponse addAttachment(final AbstractCouchDBDocument document, final File file) {
 
-    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + REVISION_PARAMETER + document.get_rev();
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + file.getName() + Constants.REVISION_PARAMETER + document.get_rev();
     return HTTP.put(url, OperationResponse.class, file, session.getUsername(), session.getPassword());
 
   }
 
   public OperationResponse deleteAttachment(final AbstractCouchDBDocument document, final String name) {
 
-    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + REVISION_PARAMETER + document.get_rev();
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + "/" + name + Constants.REVISION_PARAMETER + document.get_rev();
     return HTTP.delete(url, OperationResponse.class, session.getUsername(), session.getPassword());
 
   }
@@ -92,7 +91,7 @@ public class DocumentOperations {
 
   public OperationResponse deleteDocument(final AbstractCouchDBDocument document) {
 
-    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + REVISION_PARAMETER + document.get_rev();
+    final String url = Utils.createDocumentURL(session) + "/" + document.get_id() + Constants.REVISION_PARAMETER + document.get_rev();
     return HTTP.delete(url, OperationResponse.class, session.getUsername(), session.getPassword());
 
   }
