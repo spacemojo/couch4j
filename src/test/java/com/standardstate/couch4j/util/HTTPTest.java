@@ -18,6 +18,7 @@ public class HTTPTest {
 
     @Test
     public void safeCloseTest() {
-
-
+        HTTP.safeClose(null);
     }
+
+}
